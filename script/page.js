@@ -20,20 +20,20 @@ class Page extends HTMLElement {
     const numItemKids = Number(post.getAttribute('data-kids'))
 
     const numKidsToFetch = numItemKids - numChildPosts
-    const remaining = numKidsToFetch > 0 ? numKidsToFetch - 3 : 0
+    const remaining = numKidsToFetch >= 3 ? numKidsToFetch - 3 : numKidsToFetch
     post.setAttribute('data-kids', remaining)
 
     if (remaining === 0 && loadButton) {
       loadButton.remove()
     } else {
-      loadButton.textContent = `⇊ (+${remaining}) ⇊`
+      loadButton.textContent = `(${remaining})`
     }
 
     post.dispatchEvent(
       new CustomEvent('load', {
         bubbles: true,
         detail: {
-          cursor: numChildPosts === 0 ? 0 : numChildPosts - 1,
+          cursor: numChildPosts,
           count: 3,
           resource: Number(itemId),
         },
@@ -73,9 +73,22 @@ class Page extends HTMLElement {
     details.setAttribute('id', item.id)
     details.setAttribute('data-kids', item.kids?.length || 0)
 
+    if (item.deleted) {
+      details.setAttribute('data-deleted', '')
+      return details
+    }
+
     if (item.title) {
       const title = document.createElement('h1')
-      title.textContent = `${item.score}/🗨${item.descendants} ${item.title}`
+      title.textContent = `${item.title}`
+      const scoreCommentCounter = document.createElement('div')
+      const score = document.createElement('span')
+      score.textContent = item.score
+      const commentCounter = document.createElement('span')
+      commentCounter.textContent = `(${item.descendants})`
+      scoreCommentCounter.append(score)
+      scoreCommentCounter.append(commentCounter)
+      summary.append(scoreCommentCounter)
       summary.append(title)
     } else {
       const subtitle = document.createElement('h2')
@@ -98,7 +111,7 @@ class Page extends HTMLElement {
 
     if (item.kids?.length > 0) {
       const moreButton = document.createElement('button')
-      moreButton.textContent = `⇊ (+${item.kids.length}) ⇊`
+      moreButton.textContent = `(${item.kids.length})`
       details.append(moreButton)
 
       moreButton.addEventListener('click', Page.onLoadMore)
@@ -111,31 +124,25 @@ class Page extends HTMLElement {
   static ellapse(begin, end) {
     // Get the time difference in milliseconds
     let timeDifferenceMS = end - begin
-    const startDate = new Date(begin)
-    const endDate = new Date(end)
+    // const startDate = new Date(begin)
+    // const endDate = new Date(end)
 
-    // Check if either of the start or end date is in DST and
-    // adjust the DST offset accordingly.
-    if (
-      endDate.getTimezoneOffset() < startDate.getTimezoneOffset() ||
-      (startDate.getTimezoneOffset() < endDate.getTimezoneOffset() && startDate < endDate)
-    ) {
-      // Adjust for the DST transition
-      const dstTransition = endDate.getTimezoneOffset() - startDate.getTimezoneOffset()
-      timeDifferenceMS -= dstTransition * 60 * 1000
-    }
+    // // Check if either of the start or end date is in DST and
+    // // adjust the DST offset accordingly.
+    // if (
+    //   endDate.getTimezoneOffset() < startDate.getTimezoneOffset() ||
+    //   (startDate.getTimezoneOffset() < endDate.getTimezoneOffset() && startDate < endDate)
+    // ) {
+    //   // Adjust for the DST transition
+    //   const dstTransition = endDate.getTimezoneOffset() - startDate.getTimezoneOffset()
+    //   timeDifferenceMS -= dstTransition * 60 * 1000
+    // }
 
     // Calculate the elapsed time in seconds, minutes, hours, and days
     // const timeDifferenceSecs = Math.floor(timeDifferenceMS / 1000)
     const timeDifferenceMins = Math.floor(timeDifferenceMS / 60000)
     const timeDifferenceHours = Math.floor(timeDifferenceMS / 3600000)
     const timeDifferenceDays = Math.floor(timeDifferenceMS / 86400000)
-
-    // console.log(`Time difference in milliseconds: ${timeDifferenceMS}`)
-    // console.log(`Time difference in seconds: ${timeDifferenceSecs}`)
-    // console.log(`Time difference in minutes: ${timeDifferenceMins}`)
-    // console.log(`Time difference in hours: ${timeDifferenceHours}`)
-    // console.log(`Time difference in days: ${timeDifferenceDays}`)
 
     let ellapsedTime = ''
     if (timeDifferenceMins < 60) {

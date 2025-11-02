@@ -32,6 +32,10 @@ main {
   }
 }
 
+details[data-deleted] {
+  display: none;
+}
+
 details {
   display: flex;
   flex-direction: column;
@@ -51,6 +55,22 @@ details {
     h1 {
       font-size: 1.5rem;
       padding: 1rem;
+    }
+
+    div {
+      display: flex;
+      flex-direction: column;
+      padding: 0.5rem 0 0 0.5rem;
+      align-items: center;
+      width: 3rem;
+
+      span {
+        display: flex;
+      }
+
+      span:first-child {
+        font-size: 1.5rem;
+      }
     }
 
     h2 {
