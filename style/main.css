@@ -1,7 +1,7 @@
 html {
   box-sizing: border-box;
-  background-color: #191919;
-  color: #ccc;
+  background-color: #222222;
+  color: #bbb;
   font-family: Sans-serif;
   font-size: 0.18in;
 }
@@ -26,10 +26,10 @@ main {
   & hz-page > details {
     border-right: 1px solid #525252ff;
   }
-
-  & hz-page > details > summary h1 {
-    color: #dddddd;
-  }
+  /* 
+  & hz-page > details > section {
+    background-color: #181818;
+  } */
 
   & hz-page > details summary > button {
     border-top: none;
@@ -45,6 +45,7 @@ details {
   flex-direction: column;
   border-left: 1px solid #525252ff;
   margin-left: 1rem;
+  background-color: rgb(0 0 0 / 16%);
 
   summary {
     display: inline-flex;
@@ -103,6 +104,10 @@ details {
   section {
     display: flex;
     padding: 0 1rem 1rem 1rem;
+
+    pre {
+      white-space: pre-wrap;
+    }
   }
 }
 

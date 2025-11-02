@@ -57,13 +57,17 @@ class Page extends HTMLElement {
   static render(parent) {
     return (items) => {
       const moreButton = parent.querySelector('& > button')
-      const rootMoreButton = parent.querySelector('& > details summary > button')
+      const rootMoreButton = document.getElementById('load-more')
 
       items.forEach((item) => {
         const post = Page.renderItem(item)
 
-        if (parent.tagName === 'HZ-PAGE' && rootMoreButton) {
-          parent.insertBefore(post, parent.querySelector('& > details:last-child'))
+        if (post.getAttribute('data-deleted') === '') {
+          parent.setAttribute('data-kids', Number(post.getAttribute('data-kids') - 1))
+        }
+
+        if (parent instanceof Page && rootMoreButton) {
+          parent.insertBefore(post, rootMoreButton)
         } else {
           if (moreButton) {
             parent.insertBefore(post, moreButton)
@@ -73,7 +77,7 @@ class Page extends HTMLElement {
         }
       })
 
-      if (parent.tagName === 'HZ-PAGE' && !rootMoreButton) {
+      if (parent instanceof Page && !rootMoreButton) {
         const loadMore = document.createElement('button')
         loadMore.textContent = 'Load more'
         loadMore.addEventListener('click', (event) => {
@@ -86,6 +90,7 @@ class Page extends HTMLElement {
           )
         })
         const details = document.createElement('details')
+        details.setAttribute('id', 'load-more')
         const summary = document.createElement('summary')
         summary.append(loadMore)
         details.append(summary)
@@ -96,16 +101,16 @@ class Page extends HTMLElement {
 
   static renderItem(item) {
     const details = document.createElement('details')
-    const summary = document.createElement('summary')
-    const section = document.createElement('section')
-
     details.setAttribute('id', item.id)
-    details.setAttribute('data-kids', item.kids?.length || 0)
 
-    if (item.deleted) {
+    if (item.deleted || item.dead || item.text === '[delayed]') {
       details.setAttribute('data-deleted', '')
       return details
     }
+
+    const summary = document.createElement('summary')
+    const section = document.createElement('section')
+    details.setAttribute('data-kids', item.kids?.length || 0)
 
     if (item.title) {
       const title = document.createElement('h1')
