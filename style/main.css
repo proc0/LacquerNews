@@ -30,6 +30,10 @@ main {
   & hz-page > details > summary h1 {
     color: #dddddd;
   }
+
+  & hz-page > details summary > button {
+    border-top: none;
+  }
 }
 
 details[data-deleted] {

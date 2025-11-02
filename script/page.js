@@ -15,8 +15,9 @@ class Page extends HTMLElement {
     )
   }
 
-  static onLoadMore({ target }) {
-    const post = target.parentElement
+  static onLoadMore(event) {
+    event.stopPropagation()
+    const post = event.target.parentElement
     const loadButton = post.querySelector('& > button')
     const numChildPosts = post.querySelectorAll('& > details')?.length || 0
     const itemId = post.getAttribute('id')
@@ -56,15 +57,40 @@ class Page extends HTMLElement {
   static render(parent) {
     return (items) => {
       const moreButton = parent.querySelector('& > button')
+      const rootMoreButton = parent.querySelector('& > details summary > button')
 
       items.forEach((item) => {
         const post = Page.renderItem(item)
-        if (moreButton) {
-          parent.insertBefore(post, moreButton)
+
+        if (parent.tagName === 'HZ-PAGE' && rootMoreButton) {
+          parent.insertBefore(post, parent.querySelector('& > details:last-child'))
         } else {
-          parent.append(post)
+          if (moreButton) {
+            parent.insertBefore(post, moreButton)
+          } else {
+            parent.append(post)
+          }
         }
       })
+
+      if (parent.tagName === 'HZ-PAGE' && !rootMoreButton) {
+        const loadMore = document.createElement('button')
+        loadMore.textContent = 'Load more'
+        loadMore.addEventListener('click', (event) => {
+          event.stopPropagation()
+          parent.dispatchEvent(
+            new CustomEvent('load', {
+              bubbles: true,
+              detail: { cursor: 0, count: Page.BATCH_POSTS, resource: Resource.Top },
+            })
+          )
+        })
+        const details = document.createElement('details')
+        const summary = document.createElement('summary')
+        summary.append(loadMore)
+        details.append(summary)
+        parent.append(details)
+      }
     }
   }
 
