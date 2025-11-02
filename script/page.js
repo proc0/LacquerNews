@@ -106,6 +106,13 @@ class Page extends HTMLElement {
     if (item.text) {
       const comment = document.createElement('div')
       comment.innerHTML = item.text
+
+      const links = comment.querySelectorAll('a')
+      if (links?.length) {
+        links.forEach((link) => {
+          link.setAttribute('target', '_blank')
+        })
+      }
       section.append(comment)
     }
 
