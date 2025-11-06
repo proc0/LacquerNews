@@ -85,7 +85,11 @@ class Page extends HTMLElement {
           parent.dispatchEvent(
             new CustomEvent('load', {
               bubbles: true,
-              detail: { cursor: 0, count: Page.BATCH_POSTS, resource: Resource.Top },
+              detail: {
+                cursor: parent.querySelectorAll('& > details').length,
+                count: Page.BATCH_POSTS,
+                resource: Resource.Top,
+              },
             })
           )
         })
@@ -115,14 +119,21 @@ class Page extends HTMLElement {
     if (item.title) {
       const title = document.createElement('h1')
       title.textContent = `${item.title}`
-      const scoreCommentCounter = document.createElement('div')
-      const score = document.createElement('span')
-      score.textContent = item.score
-      const commentCounter = document.createElement('span')
-      commentCounter.textContent = `(${item.descendants})`
-      scoreCommentCounter.append(score)
-      scoreCommentCounter.append(commentCounter)
-      summary.append(scoreCommentCounter)
+      if (item.type != 'job') {
+        const scoreCommentCounter = document.createElement('div')
+        const score = document.createElement('span')
+        score.textContent = item.score
+        scoreCommentCounter.append(score)
+        if (item.descendants) {
+          const commentCounter = document.createElement('span')
+          commentCounter.textContent = `(${item.descendants})`
+          scoreCommentCounter.append(commentCounter)
+        }
+        summary.append(scoreCommentCounter)
+      } else {
+        const placeholder = document.createElement('div')
+        summary.append(placeholder)
+      }
       summary.append(title)
     } else {
       const subtitle = document.createElement('h2')

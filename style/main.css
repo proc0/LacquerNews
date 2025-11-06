@@ -25,6 +25,14 @@ main {
 
   & hz-page > details {
     border-right: 1px solid #525252ff;
+    & > summary {
+      border-top: none;
+      cursor: pointer;
+    }
+  }
+
+  & hz-page > details:first-child > summary {
+    border-top: 1px solid #525252ff;
   }
   /* 
   & hz-page > details > section {
