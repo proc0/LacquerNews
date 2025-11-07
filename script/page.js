@@ -150,7 +150,7 @@ class Page extends HTMLElement {
       const subtitle = document.createElement('h2')
       const username = document.createElement('span')
       username.textContent = item.by
-      subtitle.textContent = ` ⏲ ${Page.ellapse(item.time * 1000, Date.now())} `
+      subtitle.textContent = ` ⏲ ${Page.getEllapsedText(item.time * 1000, Date.now())} `
       subtitle.prepend(username)
       summary.append(subtitle)
       details.setAttribute('open', '')
@@ -182,38 +182,21 @@ class Page extends HTMLElement {
     return details
   }
 
-  static ellapse(begin, end) {
-    // Get the time difference in milliseconds
-    let timeDifferenceMS = end - begin
-    // const startDate = new Date(begin)
-    // const endDate = new Date(end)
+  static getEllapsedText(begin, end) {
+    const ellapsed = end - begin
+    const minutes = Math.floor(ellapsed / 60000)
+    const hours = Math.floor(ellapsed / 3600000)
+    const days = Math.floor(ellapsed / 86400000)
 
-    // // Check if either of the start or end date is in DST and
-    // // adjust the DST offset accordingly.
-    // if (
-    //   endDate.getTimezoneOffset() < startDate.getTimezoneOffset() ||
-    //   (startDate.getTimezoneOffset() < endDate.getTimezoneOffset() && startDate < endDate)
-    // ) {
-    //   // Adjust for the DST transition
-    //   const dstTransition = endDate.getTimezoneOffset() - startDate.getTimezoneOffset()
-    //   timeDifferenceMS -= dstTransition * 60 * 1000
-    // }
-
-    // Calculate the elapsed time in seconds, minutes, hours, and days
-    // const timeDifferenceSecs = Math.floor(timeDifferenceMS / 1000)
-    const timeDifferenceMins = Math.floor(timeDifferenceMS / 60000)
-    const timeDifferenceHours = Math.floor(timeDifferenceMS / 3600000)
-    const timeDifferenceDays = Math.floor(timeDifferenceMS / 86400000)
-
-    let ellapsedTime = ''
-    if (timeDifferenceMins < 60) {
-      ellapsedTime = `${timeDifferenceMins} minutes`
-    } else if (timeDifferenceHours < 24) {
-      ellapsedTime = `${timeDifferenceHours} hours`
+    let ellapsedText = ''
+    if (minutes < 60) {
+      ellapsedText = `${minutes} minutes`
+    } else if (hours < 24) {
+      ellapsedText = `${hours} hours`
     } else {
-      ellapsedTime = `${timeDifferenceDays} days`
+      ellapsedText = `${days} days`
     }
 
-    return ellapsedTime
+    return ellapsedText
   }
 }
