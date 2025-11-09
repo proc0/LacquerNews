@@ -1,3 +1,5 @@
+import { parse } from 'node-html-parser'
+
 const convertRequestBodyToFormUrlEncoded = (data) => {
   const bodyKeys = Object.keys(data)
   const str = []
@@ -54,10 +56,12 @@ export class Server {
     })
       .then((res) => res.text())
       .then((body) => {
+        const doc = parse(body)
+        const upvoteLink = doc.querySelector(`#up_${id}`).getAttribute('href')
         // const doc = cheerio.load(body)
-        console.log(body)
+        console.log(upvoteLink)
 
-        // return doc(`#up_${id}`).attr('href')
+        return upvoteLink
       })
   }
 

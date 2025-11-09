@@ -15,7 +15,7 @@ app.use(async (ctx, next) => {
 
 app.use(async (ctx, next) => {
   const start = Date.now()
-  const res = await server.getUpvoteURL('45653143')
+  const res = await server.getUpvoteURL('45866243')
   await next()
   console.log(res)
   const ms = Date.now() - start
