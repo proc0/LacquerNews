@@ -18,40 +18,40 @@ class Page extends HTMLElement {
   static onLoadMore(event) {
     event.stopPropagation()
     const parent = event.target.parentElement.parentElement.parentElement
+    const childrenLength = Page.queryChildrenLength(parent)
 
     if (parent instanceof Page) {
       return parent.dispatchEvent(
         new CustomEvent('load', {
           bubbles: true,
           detail: {
-            cursor: Page.queryChildrenLength(parent),
+            cursor: childrenLength,
             count: Page.BATCH_POSTS,
             resource: Resource.Top,
           },
         })
       )
     }
-    const loadButton = Page.queryLoader(parent)
-    const numChildPosts = Page.queryChildrenLength(parent)
+
     const itemId = parent.getAttribute('id')
-    const numItemKids = Number(parent.getAttribute('data-kids'))
+    const kidsNumber = Number(parent.getAttribute('data-kids'))
+    const kidsLength = kidsNumber > Page.BATCH_KIDS ? kidsNumber - childrenLength : kidsNumber
+    const kidsLeft = kidsLength > Page.BATCH_KIDS ? kidsLength - Page.BATCH_KIDS : 0
+    parent.setAttribute('data-kids', kidsLeft)
 
-    const numKidsToFetch = numItemKids > Page.BATCH_KIDS ? numItemKids - numChildPosts : numItemKids
-    const remaining = numKidsToFetch > Page.BATCH_KIDS ? numKidsToFetch - Page.BATCH_KIDS : 0
-    parent.setAttribute('data-kids', remaining)
-
-    if (remaining === 0 && loadButton) {
-      loadButton.remove()
+    const loader = Page.queryLoader(parent)
+    if (kidsLeft === 0 && loader) {
+      loader.remove()
     } else {
-      loadButton.textContent = `${'∨'.repeat(remaining)}`
+      loader.textContent = `${'∨'.repeat(kidsLeft)}`
     }
 
     return parent.dispatchEvent(
       new CustomEvent('load', {
         bubbles: true,
         detail: {
-          cursor: numChildPosts,
-          count: 3,
+          cursor: childrenLength,
+          count: Page.BATCH_KIDS,
           resource: Number(itemId),
         },
       })
@@ -61,9 +61,9 @@ class Page extends HTMLElement {
   static onExpand(event) {
     event.stopImmediatePropagation()
     const details = event.currentTarget
-    const moreButton = Page.queryLoader(details)
-    if (!details.open && !Page.queryChildrenLength(details) && moreButton) {
-      moreButton.click()
+    const loader = Page.queryLoader(details)
+    if (!details.open && !Page.queryChildrenLength(details) && !!loader) {
+      loader.click()
     }
   }
 
