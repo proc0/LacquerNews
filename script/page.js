@@ -1,16 +1,14 @@
-class Page extends HTMLElement {
+class Page extends View {
   static BATCH_KIDS = 3
   static BATCH_POSTS = 5
-
-  constructor() {
-    super()
-  }
+  #RESOURCE
 
   connectedCallback() {
+    this.RESOURCE = Resource[this.getAttribute('data-type')]
     this.dispatchEvent(
       new CustomEvent('load', {
         bubbles: true,
-        detail: { cursor: 0, count: Page.BATCH_POSTS, resource: Resource.Top },
+        detail: { cursor: 0, count: Page.BATCH_POSTS, resource: this.RESOURCE },
       })
     )
   }
@@ -146,7 +144,7 @@ class Page extends HTMLElement {
       const subtitle = document.createElement('h2')
       const username = document.createElement('span')
       username.textContent = item.by
-      subtitle.textContent = ` ⏲ ${Page.getEllapsedText(item.time * 1000, Date.now())} `
+      subtitle.textContent = ` ⏲ ${View.getEllapsedText(item.time * 1000, Date.now())} `
       subtitle.prepend(username)
       summary.append(subtitle)
       details.setAttribute('open', '')
@@ -176,24 +174,6 @@ class Page extends HTMLElement {
     }
 
     return details
-  }
-
-  static getEllapsedText(begin, end) {
-    const ellapsed = end - begin
-    const minutes = Math.floor(ellapsed / 60000)
-    const hours = Math.floor(ellapsed / 3600000)
-    const days = Math.floor(ellapsed / 86400000)
-
-    let ellapsedText = ''
-    if (minutes < 60) {
-      ellapsedText = `${minutes} minutes`
-    } else if (hours < 24) {
-      ellapsedText = `${hours} hours`
-    } else {
-      ellapsedText = `${days} days`
-    }
-
-    return ellapsedText
   }
 
   static queryLoader(item) {

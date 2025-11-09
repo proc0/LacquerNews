@@ -1,22 +1,29 @@
 class View extends HTMLElement {
-  model = new Model()
-
-  connectedCallback() {
-    this.addEventListener('load', ({ detail, target }) => {
-      this.model.getItems(detail).then(Page.render(target))
-    })
-  }
+  static model = new Model()
 
   constructor() {
     super()
+
+    this.addEventListener('load', ({ detail, target }) => {
+      View.model.getItems(detail).then(Page.render(target))
+    })
   }
 
-  initialize() {
-    const TAG_PAGE = 'hz-page'
-    customElements.define(TAG_PAGE, Page)
-    const page = document.createElement(TAG_PAGE)
-    this.appendChild(page)
+  static getEllapsedText(begin, end) {
+    const ellapsed = end - begin
+    const minutes = Math.floor(ellapsed / 60000)
+    const hours = Math.floor(ellapsed / 3600000)
+    const days = Math.floor(ellapsed / 86400000)
 
-    return this
+    let ellapsedText = ''
+    if (minutes < 60) {
+      ellapsedText = `${minutes} minutes`
+    } else if (hours < 24) {
+      ellapsedText = `${hours} hours`
+    } else {
+      ellapsedText = `${days} days`
+    }
+
+    return ellapsedText
   }
 }
