@@ -12,7 +12,7 @@ const convertRequestBodyToFormUrlEncoded = (data) => {
 }
 
 export class Server {
-  BaseURL = 'https://news.ycombinator.com'
+  static BASE_URL = 'https://news.ycombinator.com'
 
   logUser(username, password) {
     let headers = new Headers({
@@ -42,27 +42,26 @@ export class Server {
       })
   }
 
-  getUpvoteURL(id) {
-    let headers = new Headers({
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Access-Control-Allow-Origin': '*',
-      'Cookie': 'user=proc0&Nwg5zsZJgTWqqYwoIjI9qchA7KaLZXeB',
-    })
-
-    return fetch(`${this.BaseURL}/item?id=${id}`, {
-      headers,
+  static async getUpvoteUrl(ctx) {
+    const options = {
+      headers: new Headers({
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Access-Control-Allow-Origin': '*',
+        'Cookie': 'user=proc0&Nwg5zsZJgTWqqYwoIjI9qchA7KaLZXeB',
+      }),
       mode: 'no-cors',
       credentials: 'include',
-    })
-      .then((res) => res.text())
-      .then((body) => {
-        const doc = parse(body)
-        const upvoteLink = doc.querySelector(`#up_${id}`).getAttribute('href')
-        // const doc = cheerio.load(body)
-        console.log(upvoteLink)
-
-        return upvoteLink
-      })
+    }
+    const id = ctx.params.id
+    const request = await fetch(`${Server.BASE_URL}/item?id=${id}`, options)
+    const response = await request.text()
+    const html = parse(response)
+    const upvoteUrl = html.querySelector(`#up_${id}`).getAttribute('href')
+    // upvoteUrl.slice(0, upvoteUrl.lastIndexOf('&goto'))
+    const upvoteRequest = await fetch(`${Server.BASE_URL}/${upvoteUrl}`, options)
+    const upvoteResponse = await upvoteRequest.text()
+    console.log(upvoteUrl)
+    ctx.redirect('/')
   }
 
   getHmac(id) {

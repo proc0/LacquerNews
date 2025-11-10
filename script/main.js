@@ -7,7 +7,7 @@ class App extends HTMLElement {
     const TAG_PAGE = 'phreak-page'
     customElements.define(TAG_PAGE, Page)
     const page = document.createElement(TAG_PAGE)
-    page.setAttribute('data-type', 'Top')
+    page.setAttribute('data-type', 'New')
     this.appendChild(page)
 
     // const page2 = document.createElement(TAG_PAGE)
