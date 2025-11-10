@@ -1,5 +1,5 @@
 class Store {
-  static DB_NAME = 'PhreakNews'
+  static DB_NAME = 'LacquerNews'
   static STORE_NAME = 'items'
   static VERSION = 1
   static CACHE_LIFE = 5 * 60 * 1000

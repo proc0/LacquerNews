@@ -1,5 +1,5 @@
 {
-  "name": "PhreakNews",
+  "name": "LacquerNews",
   "version": "0.0.2",
   "description": "Lightweight Hacker News with an ergonomic UI",
   "keywords": [
@@ -7,13 +7,13 @@
     "YCombinator",
     "Tech"
   ],
-  "homepage": "https://github.com/proc0/PhreakNews#readme",
+  "homepage": "https://github.com/proc0/LacquerNews#readme",
   "bugs": {
-    "url": "https://github.com/proc0/PhreakNews/issues"
+    "url": "https://github.com/proc0/LacquerNews/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/proc0/PhreakNews.git"
+    "url": "git+https://github.com/proc0/LacquerNews.git"
   },
   "license": "MIT",
   "author": "proc0",

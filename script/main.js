@@ -4,7 +4,7 @@ class App extends HTMLElement {
   }
 
   initialize() {
-    const TAG_PAGE = 'phreak-page'
+    const TAG_PAGE = 'app-page'
     customElements.define(TAG_PAGE, Page)
     const page = document.createElement(TAG_PAGE)
     page.setAttribute('data-type', 'New')
@@ -19,7 +19,7 @@ class App extends HTMLElement {
 }
 
 window.onload = function () {
-  const TAG_APP = 'phreak-app'
+  const TAG_APP = 'app-main'
   customElements.define(TAG_APP, App, { extends: 'main' })
   const main = document.createElement('main', { is: TAG_APP }).initialize()
 
