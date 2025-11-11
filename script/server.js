@@ -34,7 +34,7 @@ export class Server {
 
     const response = await request.text()
 
-    console.log(response)
+    console.log(request)
 
     if (response.match(/Bad Login/i)) {
       return false

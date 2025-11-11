@@ -25,7 +25,7 @@ class Page extends View {
           detail: {
             cursor: childrenLength,
             count: Page.BATCH_POSTS,
-            resource: Resource.Top,
+            resource: Resource[parent.getAttribute('data-type')],
           },
         })
       )
