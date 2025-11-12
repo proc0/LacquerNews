@@ -17,7 +17,10 @@ export class Server {
   static async login(username, password) {
     let headers = new Headers({
       'Content-Type': 'application/x-www-form-urlencoded',
+      'Access-Control-Allow-Credentials': 'true',
       'Access-Control-Allow-Origin': '*',
+      'SameSite': 'none',
+      'Secure': 'true',
     })
 
     const request = await fetch(`${Server.BASE_URL}/login`, {
@@ -33,8 +36,8 @@ export class Server {
     })
 
     const response = await request.text()
-
-    console.log(request)
+    console.log(response)
+    console.log(request.headers)
 
     if (response.match(/Bad Login/i)) {
       return false
