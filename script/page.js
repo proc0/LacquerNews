@@ -83,9 +83,22 @@ class Page extends View {
     return details
   }
 
+  static renderLoading(parent) {
+    const loadingText = document.createElement('span')
+    loadingText.setAttribute('data-loading', '')
+    loadingText.textContent = 'Loading...'
+
+    parent.prepend(loadingText)
+  }
+
   static render(parent) {
     return (items) => {
       const loader = Page.queryLoader(parent)
+      const loading = parent.querySelector('span[data-loading]')
+
+      if (loading) {
+        loading.remove(0)
+      }
 
       items.forEach((item) => {
         const post = Page.renderItem(item)

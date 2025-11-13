@@ -5,6 +5,7 @@ class View extends HTMLElement {
     super()
 
     this.addEventListener('load', ({ detail, target }) => {
+      Page.renderLoading(target)
       View.model.getItems(detail).then(Page.render(target))
     })
   }
