@@ -41,7 +41,7 @@ class Page extends View {
     if (kidsLeft === 0) {
       details.remove()
     } else {
-      event.target.textContent = `${'∨'.repeat(kidsLeft)}`
+      event.target.textContent = `${'✛'.repeat(kidsLeft)}`
     }
 
     return parent.dispatchEvent(
@@ -68,7 +68,7 @@ class Page extends View {
   static renderLoader(item) {
     const button = document.createElement('button')
     if (item?.kids?.length) {
-      button.textContent = `${'∨'.repeat(item.kids.length)}`
+      button.textContent = `${'✛'.repeat(item.kids.length)}`
     } else {
       button.textContent = 'Load more'
     }
@@ -127,6 +127,7 @@ class Page extends View {
       link.setAttribute('href', item.url)
       link.setAttribute('target', '_blank')
       link.textContent = `${item.title}`
+      title.setAttribute('title', item.url)
       title.append(link)
       if (item.type != 'job') {
         const scoreCommentCounter = document.createElement('div')
