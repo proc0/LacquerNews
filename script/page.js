@@ -144,15 +144,21 @@ class Page extends View {
         const arrows = document.createElement('div')
         const upArrow = document.createElement('button')
         upArrow.textContent = '▲'
-        let headers = new Headers({
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'Access-Control-Allow-Origin': '*',
+
+        upArrow.addEventListener('click', (e) => {
+          cookieStore.getAll().then((cookie) => {
+            const headers = new Headers({
+              'Content-Type': 'application/x-www-form-urlencoded',
+              'Access-Control-Allow-Origin': '*',
+              'Cookie': cookie,
+            })
+            fetch(`http://localhost:3000/upvote/${item.id}`, {
+              headers,
+              mode: 'no-cors',
+              credentials: 'include',
+            }).then((res) => console.log(res))
+          })
         })
-        upArrow.addEventListener('click', (e) =>
-          fetch(`http://localhost:3000/upvote/${item.id}`, { headers, mode: 'no-cors' }).then(
-            (res) => console.log(res)
-          )
-        )
         const downArrow = document.createElement('button')
         downArrow.textContent = '▼'
         downArrow.addEventListener('click', (e) => console.log('down'))

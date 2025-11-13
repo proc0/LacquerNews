@@ -61,7 +61,7 @@ export class Server {
       headers: new Headers({
         'Content-Type': 'application/x-www-form-urlencoded',
         'Access-Control-Allow-Origin': '*',
-        // 'Cookie': 'user=proc0&Nwg5zsZJgTWqqYwoIjI9qchA7KaLZXeB',
+        'Cookie': `user=${ctx.cookies.get('user')}`,
       }),
       mode: 'no-cors',
       credentials: 'include',
