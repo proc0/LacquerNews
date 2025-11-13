@@ -26,11 +26,7 @@ router
   .get('/script/:file', loadScript)
   .get('/style/:file', loadStyle)
   .get('/upvote/:id', Server.getUpvoteUrl)
-  .get('/login', async (ctx) => {
-    const loginRes = await Server.login('proc0', 'Minr11.morgu1')
 
-    ctx.body = loginRes
-  })
 // .post('/post', create)
 
 app.use(router.routes())

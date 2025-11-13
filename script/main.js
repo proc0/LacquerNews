@@ -4,22 +4,6 @@ class App extends HTMLElement {
   }
 
   initialize() {
-    const loginButton = document.createElement('button')
-    loginButton.textContent = 'login'
-
-    loginButton.addEventListener('click', () => {
-      const headers = new Headers({
-        'Access-Control-Allow-Origin': '*',
-      })
-      fetch('http://localhost:3000/login', {
-        credentials: 'include',
-        mode: 'no-cors',
-      }).then((res) => {
-        console.log(res.headers)
-        res.headers.getSetCookie()
-      })
-    })
-    this.append(loginButton)
     const TAG_PAGE = 'app-page'
     customElements.define(TAG_PAGE, Page)
     const page = document.createElement(TAG_PAGE)

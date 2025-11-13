@@ -15,7 +15,8 @@ class Page extends View {
 
   static onLoadMore(event) {
     event.stopPropagation()
-    const parent = event.target.parentElement.parentElement.parentElement
+    const details = event.target.parentElement.parentElement
+    const parent = details.parentElement
     const childrenLength = Page.queryChildrenLength(parent)
 
     if (parent instanceof Page) {
@@ -37,11 +38,10 @@ class Page extends View {
     const kidsLeft = kidsLength > Page.BATCH_KIDS ? kidsLength - Page.BATCH_KIDS : 0
     parent.setAttribute('data-kids', kidsLeft)
 
-    const loader = Page.queryLoader(parent)
-    if (kidsLeft === 0 && loader) {
-      loader.remove()
+    if (kidsLeft === 0) {
+      details.remove()
     } else {
-      loader.textContent = `${'∨'.repeat(kidsLeft)}`
+      event.target.textContent = `${'∨'.repeat(kidsLeft)}`
     }
 
     return parent.dispatchEvent(
@@ -167,7 +167,9 @@ class Page extends View {
         summary.append(arrows)
       } else {
         const placeholder = document.createElement('div')
+        const placeholder2 = document.createElement('div')
         summary.append(placeholder)
+        summary.append(placeholder2)
       }
       summary.append(title)
     } else {

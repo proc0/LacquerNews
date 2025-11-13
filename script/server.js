@@ -14,47 +14,47 @@ const convertRequestBodyToFormUrlEncoded = (data) => {
 export class Server {
   static BASE_URL = 'https://news.ycombinator.com'
 
-  static async login(username, password) {
-    let headers = new Headers({
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Access-Control-Allow-Credentials': 'true',
-      'Access-Control-Allow-Origin': '*',
-      'SameSite': 'none',
-      'Secure': 'true',
-    })
+  // static async login(username, password) {
+  //   let headers = new Headers({
+  //     'Content-Type': 'application/x-www-form-urlencoded',
+  //     'Access-Control-Allow-Credentials': 'true',
+  //     'Access-Control-Allow-Origin': '*',
+  //     'SameSite': 'none',
+  //     'Secure': 'true',
+  //   })
 
-    const request = await fetch(`${Server.BASE_URL}/login`, {
-      method: 'POST',
-      headers: headers,
-      body: convertRequestBodyToFormUrlEncoded({
-        acct: username,
-        pw: password,
-        goto: 'news',
-      }),
-      mode: 'no-cors',
-      credentials: 'include',
-    })
+  //   const request = await fetch(`${Server.BASE_URL}/login`, {
+  //     method: 'POST',
+  //     headers: headers,
+  //     body: convertRequestBodyToFormUrlEncoded({
+  //       acct: username,
+  //       pw: password,
+  //       goto: 'news',
+  //     }),
+  //     mode: 'no-cors',
+  //     credentials: 'include',
+  //   })
 
-    const response = await request.text()
-    console.log(response)
-    console.log(request.headers)
+  //   const response = await request.text()
+  //   console.log(response)
+  //   console.log(request.headers)
 
-    if (response.match(/Bad Login/i)) {
-      return false
-    } else {
-      return true
-    }
+  //   if (response.match(/Bad Login/i)) {
+  //     return false
+  //   } else {
+  //     return true
+  //   }
 
-    // .then((res) => res.text())
-    // .then((body) => {
-    //   console.log(body)
-    //   if (body.match(/Bad Login/i)) {
-    //     return false
-    //   } else {
-    //     return true
-    //   }
-    // })
-  }
+  //   // .then((res) => res.text())
+  //   // .then((body) => {
+  //   //   console.log(body)
+  //   //   if (body.match(/Bad Login/i)) {
+  //   //     return false
+  //   //   } else {
+  //   //     return true
+  //   //   }
+  //   // })
+  // }
 
   static async getUpvoteUrl(ctx) {
     const options = {
