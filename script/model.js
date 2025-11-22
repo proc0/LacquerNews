@@ -1,18 +1,18 @@
 class Model {
   store = new Store()
 
-  getIds(cursor, count, resource) {
-    if (resource instanceof Resource) {
-      return Client.fetchIds(resource.url).then((ids) => ids.slice(cursor, cursor + count))
-    } else if (typeof resource === 'number') {
-      return this.store.find(resource).then((item) => item.kids.slice(cursor, cursor + count))
+  getIds(cursor, count, source) {
+    if (source instanceof Stories) {
+      return Client.fetchIds(source.url).then((ids) => ids.slice(cursor, cursor + count))
+    } else if (typeof source === 'number') {
+      return this.store.find(source).then((item) => item.kids.slice(cursor, cursor + count))
     } else {
       return this.unit(this.unit([]))
     }
   }
 
-  getItems({ cursor, count, resource }) {
-    return this.getIds(cursor, count, resource)
+  getItems({ cursor, count, source }) {
+    return this.getIds(cursor, count, source)
       .then(this.store.retrieve.bind(this.store))
       .then(this.getMissingItems.bind(this))
       .catch((error) => console.error(error))

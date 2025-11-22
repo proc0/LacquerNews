@@ -1,14 +1,13 @@
 class Page extends View {
-  static BATCH_KIDS = 3
-  static BATCH_POSTS = 5
-  #RESOURCE
+  static LOAD_COUNT = 5
+  #SOURCE
 
   connectedCallback() {
-    this.RESOURCE = Resource[this.getAttribute('data-type')]
+    this.SOURCE = Stories[this.getAttribute('data-type')]
     this.dispatchEvent(
       new CustomEvent('load', {
         bubbles: true,
-        detail: { cursor: 0, count: Page.BATCH_POSTS, resource: this.RESOURCE },
+        detail: { cursor: 0, count: Page.LOAD_COUNT, source: this.SOURCE },
       })
     )
   }
@@ -24,13 +23,5 @@ class Page extends View {
         }
       })
     }
-  }
-
-  static queryLoader(item) {
-    return item.querySelector('footer button')
-  }
-
-  static queryChildrenLength(item) {
-    return item.querySelectorAll('section > article')?.length || 0
   }
 }

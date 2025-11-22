@@ -1,8 +1,10 @@
 class Item extends View {
+  static LOAD_COUNT = 3
+
   static onLoadMore(event) {
     event.stopPropagation()
     const article = event.target.parentElement.parentElement
-    const childrenLength = Page.queryChildrenLength(article)
+    const childrenLength = Item.queryChildrenLength(article)
 
     // TODO: abstract this event dispatch
     if (article instanceof Page) {
@@ -11,8 +13,8 @@ class Item extends View {
           bubbles: true,
           detail: {
             cursor: childrenLength,
-            count: Page.BATCH_POSTS,
-            resource: Resource[article.getAttribute('data-type')],
+            count: Page.LOAD_COUNT,
+            source: Stories[article.getAttribute('data-type')],
           },
         })
       )
@@ -20,8 +22,8 @@ class Item extends View {
 
     const itemId = article.getAttribute('id')
     const kidsNumber = Number(article.getAttribute('data-kids'))
-    const kidsLength = kidsNumber > Page.BATCH_KIDS ? kidsNumber - childrenLength : kidsNumber
-    const kidsLeft = kidsLength > Page.BATCH_KIDS ? kidsLength - Page.BATCH_KIDS : 0
+    const kidsLength = kidsNumber > Item.LOAD_COUNT ? kidsNumber - childrenLength : kidsNumber
+    const kidsLeft = kidsLength > Item.LOAD_COUNT ? kidsLength - Item.LOAD_COUNT : 0
     article.setAttribute('data-kids', kidsLeft)
 
     if (kidsLeft === 0) {
@@ -35,8 +37,8 @@ class Item extends View {
         bubbles: true,
         detail: {
           cursor: childrenLength,
-          count: Page.BATCH_KIDS,
-          resource: Number(itemId),
+          count: Item.LOAD_COUNT,
+          source: Number(itemId),
         },
       })
     )
@@ -45,14 +47,12 @@ class Item extends View {
   static onExpand(event) {
     event.stopPropagation()
     const article = event.target.parentElement
-    const loader = Page.queryLoader(article)
-    // TODO: write static isOpen, checks if it has kids and/or details element, and opens/closes it
-    if (!Page.queryChildrenLength(article) && !!loader) {
+    const loader = Item.queryLoader(article)
+
+    Item.toggleContainer(article)
+
+    if (!Item.queryChildrenLength(article) && !!loader) {
       loader.click()
-    } else if (article.querySelector('details')?.getAttribute('open') === '') {
-      article.querySelector('details').removeAttribute('open')
-    } else {
-      article.querySelector('details')?.setAttribute('open', '')
     }
   }
 
@@ -68,38 +68,36 @@ class Item extends View {
     article.setAttribute('data-kids', item.kids?.length || 0)
 
     if (item.title && item.url) {
-      const title = document.createElement('h1')
       const link = document.createElement('a')
       link.setAttribute('target', '_blank')
       link.setAttribute('href', item.url)
       link.textContent = item.title
-      link.addEventListener('click', (event) => {
-        event.stopPropagation()
-      })
+      link.addEventListener('click', this.depropagate)
+
+      const title = document.createElement('h1')
       title.append(link)
       title.addEventListener('click', Item.onExpand)
       article.append(title)
     }
 
     if (item.text) {
-      const subtitle = document.createElement('h2')
       const username = document.createElement('span')
       username.textContent = item.by
+
+      const subtitle = document.createElement('h2')
       subtitle.textContent = ` ⏲ ${View.getEllapsedText(item.time * 1000, Date.now())} `
       subtitle.prepend(username)
       article.append(subtitle)
+      subtitle.addEventListener('click', Item.onExpand)
 
       const comment = document.createElement('div')
       comment.innerHTML = item.text
 
       const links = comment.querySelectorAll('a')
       if (links?.length) {
-        links.forEach((link) => {
-          link.setAttribute('target', '_blank')
-        })
+        links.forEach((link) => link.setAttribute('target', '_blank'))
       }
 
-      subtitle.addEventListener('click', Item.onExpand)
       article.append(comment)
     }
 
@@ -122,5 +120,29 @@ class Item extends View {
     }
 
     return article
+  }
+
+  static toggleContainer(item) {
+    const container = Item.queryChildrenContainer(item)
+
+    if (!container) return
+
+    if (container.getAttribute('open') === '') {
+      container.setAttribute('open', '')
+    } else {
+      container.removeAttribute('open')
+    }
+  }
+
+  static queryChildrenContainer(item) {
+    return item.querySelector('details')
+  }
+
+  static queryLoader(item) {
+    return item.querySelector('& > footer button')
+  }
+
+  static queryChildrenLength(item) {
+    return item.querySelectorAll('details > section > article')?.length || 0
   }
 }

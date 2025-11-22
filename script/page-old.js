@@ -1,6 +1,6 @@
 class PageOld extends View {
   static BATCH_KIDS = 3
-  static BATCH_POSTS = 5
+  static LOAD_COUNT = 5
   #RESOURCE
 
   connectedCallback() {
@@ -8,7 +8,7 @@ class PageOld extends View {
     this.dispatchEvent(
       new CustomEvent('load', {
         bubbles: true,
-        detail: { cursor: 0, count: Page.BATCH_POSTS, resource: this.RESOURCE },
+        detail: { cursor: 0, count: Page.LOAD_COUNT, resource: this.RESOURCE },
       })
     )
   }
@@ -25,8 +25,8 @@ class PageOld extends View {
           bubbles: true,
           detail: {
             cursor: childrenLength,
-            count: Page.BATCH_POSTS,
-            resource: Resource[parent.getAttribute('data-type')],
+            count: Page.LOAD_COUNT,
+            resource: Stories[parent.getAttribute('data-type')],
           },
         })
       )

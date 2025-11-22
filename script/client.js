@@ -1,11 +1,11 @@
 // TODO: refactor to Stories?
-class Resource {
-  static Top = new Resource('topstories')
-  static New = new Resource('newstories')
-  static Ask = new Resource('askstories')
-  static Job = new Resource('jobstories')
-  static Best = new Resource('beststories')
-  static Show = new Resource('showstories')
+class Stories {
+  static Top = new Stories('topstories')
+  static New = new Stories('newstories')
+  static Ask = new Stories('askstories')
+  static Job = new Stories('jobstories')
+  static Best = new Stories('beststories')
+  static Show = new Stories('showstories')
 
   constructor(url) {
     this.url = url

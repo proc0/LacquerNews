@@ -42,4 +42,8 @@ class View extends HTMLElement {
 
     return ellapsedText
   }
+
+  static depropagate(event) {
+    event.stopPropagation()
+  }
 }
