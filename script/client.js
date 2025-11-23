@@ -1,4 +1,3 @@
-// TODO: refactor to Stories?
 class Stories {
   static Top = new Stories('topstories')
   static New = new Stories('newstories')

@@ -4,12 +4,7 @@ class Page extends View {
 
   connectedCallback() {
     this.SOURCE = Stories[this.getAttribute('data-type')]
-    this.dispatchEvent(
-      new CustomEvent('load', {
-        bubbles: true,
-        detail: { cursor: 0, count: Page.LOAD_COUNT, source: this.SOURCE },
-      })
-    )
+    this.dispatchEvent(View.getLoadEvent(0, Page.LOAD_COUNT, this.SOURCE))
   }
 
   static render(parent) {
