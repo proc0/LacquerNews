@@ -8,13 +8,13 @@ html {
   font-size: 0.18in;
 }
 
+h1,
+h2 {
+  cursor: pointer;
+}
+
 article {
   padding: 0 0 0 1rem;
-
-  h1,
-  h2 {
-    cursor: pointer;
-  }
 
   details {
     summary {
@@ -24,5 +24,17 @@ article {
 
   &[data-dead] {
     display: none;
+  }
+}
+
+h2:has(~ details:not([open])) {
+  &::after {
+    content: '[🞤]';
+  }
+}
+
+h2:has(~ details[open]) {
+  &::after {
+    content: '[─]';
   }
 }

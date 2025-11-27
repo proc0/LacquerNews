@@ -186,7 +186,7 @@ class PageOld extends View {
       const subtitle = document.createElement('h2')
       const username = document.createElement('span')
       username.textContent = item.by
-      subtitle.textContent = ` ⏲ ${View.getEllapsedText(item.time * 1000, Date.now())} `
+      subtitle.textContent = ` ⏲ ${View.getTimeLabel(item.time * 1000, Date.now())} `
       subtitle.prepend(username)
       summary.append(subtitle)
       details.setAttribute('open', '')

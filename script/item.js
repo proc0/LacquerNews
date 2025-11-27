@@ -52,16 +52,13 @@ class Item {
 
   static onLoad(event) {
     event.stopPropagation()
-    let article = event.target.parentElement.parentElement.parentElement.parentElement
-    if (article.getAttribute('id') === 'loader') {
-      article = article.parentElement
-    }
+    const article = event.target.closest('article')
 
-    if (article instanceof Page) {
-      const postCount = article.querySelectorAll('& > article')?.length || 0
-      return article.dispatchEvent(
-        View.getLoadEvent(postCount, Page.LOAD_COUNT, Page.getStory(article))
-      )
+    if (article.getAttribute('id') === 'loader' && article.parentElement instanceof Page) {
+      const page = article.parentElement
+      const postCount = page.querySelectorAll('& > article')?.length || 0
+      const loadEvent = View.getLoadEvent(postCount, Page.LOAD_COUNT, Page.getStory(page))
+      return page.dispatchEvent(loadEvent)
     }
 
     const childCount = Item.countChildren(article)
@@ -80,8 +77,8 @@ class Item {
 
     Item.queryContainer(article).setAttribute('open', '')
     const itemId = article.getAttribute('id')
-
-    return article.dispatchEvent(View.getLoadEvent(childCount, Item.LOAD_COUNT, Number(itemId)))
+    const loadEvent = View.getLoadEvent(childCount, Item.LOAD_COUNT, Number(itemId))
+    return article.dispatchEvent(loadEvent)
   }
 
   static onExpand(event) {
@@ -112,7 +109,6 @@ class Item {
     const summary = document.createElement('summary')
     const section = document.createElement('section')
     const comment = document.createElement('div')
-    const footer = document.createElement('footer')
 
     if (item.title) {
       if (item.url) {
@@ -131,8 +127,11 @@ class Item {
 
     if (item.by && item.time) {
       const username = document.createElement('span')
-      username.textContent = item.by
-      subtitle.textContent = ` ⏲ ${View.getEllapsedText(item.time * 1000, Date.now())} `
+      username.textContent = `${item.score || ''} ${item.by} `
+      const childCount = item.descendants || item.kids?.length || 0
+      const childCountLabel = childCount > 0 ? `🗨 ${childCount}` : ''
+      const timeLabel = View.getTimeLabel(item.time * 1000, Date.now())
+      subtitle.textContent = `⏲ ${timeLabel} ${childCountLabel} `
       subtitle.prepend(username)
       subtitle.addEventListener('click', Item.onExpand)
     }
@@ -162,8 +161,9 @@ class Item {
 
     if (item.kids?.length > 0) {
       const button = document.createElement('button')
+      const footer = document.createElement('footer')
       // button.textContent = `${'✛'.repeat(item.kids.length)}`
-      button.textContent = `✛${item.kids.length}`
+      button.textContent = `✛${item.descendants || item.kids?.length || 0}`
       button.addEventListener('click', Item.onLoad)
       footer.append(button)
       section.append(footer)

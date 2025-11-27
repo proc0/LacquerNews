@@ -34,9 +34,9 @@ class Page extends View {
       })
 
       if (parent instanceof Page && !parent.querySelector('article#loader')) {
-        const loader = Item.render({ kids: [1, 2, 3], id: 'loader' })
+        const loader = Item.render({ kids: items.map((i) => i.id), id: 'loader' })
         Item.openContainer(Item.queryContainer(loader))
-        parent.append(loader)
+        parent.appendChild(loader)
       }
     }
   }

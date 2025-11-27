@@ -25,7 +25,7 @@ class View extends HTMLElement {
     parent.querySelector('span[data-loading]').remove()
   }
 
-  static getEllapsedText(begin, end) {
+  static getTimeLabel(begin, end) {
     const ellapsed = end - begin
     const seconds = Math.floor(ellapsed / 1000)
     const minutes = Math.floor(ellapsed / 60000)
