@@ -18,7 +18,7 @@ class View extends HTMLElement {
     loadingText.setAttribute('data-loading', '')
     loadingText.textContent = 'Loading...'
 
-    parent.append(loadingText)
+    parent.appendChild(loadingText)
   }
 
   static removeLoading(parent) {

@@ -1,0 +1,9 @@
+html.theme-gruvbox {
+  --color-background: #222;
+  --color-foreground: #bbb;
+}
+
+html {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+}
