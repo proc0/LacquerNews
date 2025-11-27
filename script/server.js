@@ -1,14 +1,15 @@
 import { parse } from 'node-html-parser'
 
-const convertRequestBodyToFormUrlEncoded = (data) => {
-  const bodyKeys = Object.keys(data)
-  const str = []
-  for (let i = 0; i < bodyKeys.length; i += 1) {
-    const thisKey = bodyKeys[i]
-    const thisValue = data[thisKey]
-    str.push(`${encodeURIComponent(thisKey)}=${encodeURIComponent(thisValue)}`)
+const encode = (data) => {
+  const keys = Object.keys(data)
+  const params = []
+  for (let i = 0; i < keys.length; i++) {
+    const key = keys[i]
+    const value = data[key]
+    params.push(`${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
   }
-  return str.join('&')
+
+  return params.join('&')
 }
 
 export class Server {
@@ -26,7 +27,7 @@ export class Server {
   //   const request = await fetch(`${Server.BASE_URL}/login`, {
   //     method: 'POST',
   //     headers: headers,
-  //     body: convertRequestBodyToFormUrlEncoded({
+  //     body: encode({
   //       acct: username,
   //       pw: password,
   //       goto: 'news',
@@ -56,7 +57,7 @@ export class Server {
   //   // })
   // }
 
-  static async getUpvoteUrl(ctx) {
+  static async upvote(ctx) {
     const options = {
       headers: new Headers({
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -79,64 +80,38 @@ export class Server {
     ctx.body = { ok: true }
   }
 
-  getHmac(id) {
-    return fetch(`${this.BaseURL}/item?id=${id}`, {
+  static async reply(ctx) {
+    const options = {
+      headers: new Headers({
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Access-Control-Allow-Origin': '*',
+        'Cookie': `user=${ctx.cookies.get('user')}`,
+      }),
+      mode: 'no-cors',
+      credentials: 'include',
+    }
+    const id = ctx.params.id
+    const text = ctx.request.body.text
+    const request = await fetch(`${Server.BASE_URL}/item?id=${id}`, options)
+    const response = await request.text()
+    const html = parse(response)
+    const hmac = html.querySelector('input[name=hmac]').getAttribute('value')
+    const commentRequest = await fetch(`${Server.BASE_URL}/comment`, {
+      method: 'POST',
+      headers: options.headers,
+      body: encode({
+        parent: id,
+        goto: `item?id=${id}`,
+        hmac,
+        text,
+      }),
       mode: 'no-cors',
       credentials: 'include',
     })
-      .then((res) => res.text())
-      .then((body) => {
-        const doc = cheerio.load(body)
+    const commentResponse = await commentRequest.text()
 
-        return doc('input[name=hmac]').attr('value')
-      })
-  }
-
-  upvote(id) {
-    return this.getUpvoteURL(id)
-      .then((url) =>
-        fetch(`${this.BaseURL}/${url}`, {
-          mode: 'no-cors',
-          credentials: 'include',
-        })
-      )
-      .then((res) => res.text())
-      .then((body) => {
-        return true
-      })
-      .catch((error) => {
-        console.log(error)
-        return false
-      })
-  }
-
-  reply(id, text) {
-    return this.getHmac(id)
-      .then((hmac) => {
-        let headers = new Headers({
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'Access-Control-Allow-Origin': '*',
-        })
-
-        return fetch(`${this.BaseURL}/comment`, {
-          method: 'POST',
-          headers: headers,
-          body: convertRequestBodyToFormUrlEncoded({
-            parent: id,
-            goto: `item?id=${id}`,
-            hmac: hmac,
-            text: text,
-          }),
-          mode: 'no-cors',
-          credentials: 'include',
-        })
-      })
-      .then((res) => res.text())
-      .then((body) => {
-        return {
-          success: true,
-          error: null,
-        }
-      })
+    console.log(commentResponse)
+    // ctx.redirect('/')
+    ctx.body = { ok: true }
   }
 }

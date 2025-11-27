@@ -12,6 +12,10 @@ article {
   &[data-dead] {
     display: none;
   }
+
+  textarea {
+    width: 100%;
+  }
 }
 
 h1,

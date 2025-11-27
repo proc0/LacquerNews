@@ -93,6 +93,27 @@ class Item {
     }
   }
 
+  static onReply(event) {
+    event.stopPropagation()
+    const article = event.target.parentElement
+    const id = article.getAttribute('id')
+
+    article.querySelector('& > button').remove()
+
+    const form = document.createElement('form')
+    form.setAttribute('action', `/reply/${id}`)
+    form.setAttribute('method', 'post')
+    const textarea = document.createElement('textarea')
+    textarea.setAttribute('name', 'text')
+    const submitButton = document.createElement('button')
+    submitButton.textContent = 'submit'
+    submitButton.setAttribute('type', 'submit')
+
+    form.appendChild(textarea)
+    form.appendChild(submitButton)
+    article.insertBefore(form, article.querySelector('details'))
+  }
+
   static render(item) {
     const article = document.createElement('article')
     article.setAttribute('id', item.id)
@@ -147,6 +168,10 @@ class Item {
     if (item.type === 'comment') {
       article.append(subtitle)
       article.append(comment)
+      const replyButton = document.createElement('button')
+      replyButton.textContent = 'reply'
+      replyButton.addEventListener('click', Item.onReply)
+      article.appendChild(replyButton)
     } else {
       article.append(title)
       article.append(subtitle)

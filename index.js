@@ -1,33 +1,30 @@
-import Koa from 'koa'
-import { Server } from './script/server.js'
-import Router from '@koa/router'
 import { createReadStream } from 'fs'
+import Koa from 'koa'
+import Router from '@koa/router'
+import { bodyParser } from '@koa/bodyparser'
+
+import { Server } from './script/server.js'
 
 const app = new Koa()
 const router = new Router()
-// const server = new Server()
-// logger
-
-// middleware
 
 // app.use(logger())
-
 // app.use(koaBody())
 
-// route definitions
 if (!process.env.HN_COOKIE) {
   console.warn('Login to HN and copy the user cookie into HN_COOKIE env variable')
 } else {
   console.log(process.env.HN_COOKIE)
 }
 
+app.use(bodyParser())
+
 router
   .get('/', root)
   .get('/script/:file', loadScript)
   .get('/style/:file', loadStyle)
-  .get('/upvote/:id', Server.getUpvoteUrl)
-
-// .post('/post', create)
+  .get('/upvote/:id', Server.upvote)
+  .post('/reply/:id', Server.reply)
 
 app.use(router.routes())
 
