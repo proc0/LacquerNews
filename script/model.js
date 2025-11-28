@@ -1,9 +1,9 @@
 class Model {
   store = new Store()
 
-  getIds(cursor, count, source) {
+  list(cursor, count, source) {
     if (source instanceof Stories) {
-      return Client.fetchIds(source.url).then((ids) => ids.slice(cursor, cursor + count))
+      return Client.fetchBase(source.url).then((ids) => ids.slice(cursor, cursor + count))
     } else if (typeof source === 'number') {
       return this.store.find(source).then((item) => item.kids.slice(cursor, cursor + count))
     } else {
@@ -11,14 +11,14 @@ class Model {
     }
   }
 
-  getItems({ cursor, count, source }) {
-    return this.getIds(cursor, count, source)
+  load({ cursor, count, source }) {
+    return this.list(cursor, count, source)
       .then(this.store.retrieve.bind(this.store))
-      .then(this.getMissingItems.bind(this))
-      .catch((error) => console.error(error))
+      .then(this.reload.bind(this))
+      .catch(console.error)
   }
 
-  getMissingItems({ foundItems, missingIds }) {
+  reload({ foundItems, missingIds }) {
     return new Promise((resolve, reject) => {
       if (!missingIds.length) {
         return foundItems.length ? resolve(foundItems) : reject({ foundItems, missingIds })

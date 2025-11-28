@@ -7,7 +7,7 @@ class View extends HTMLElement {
 
     this.addEventListener(View.EVENT_LOAD, ({ detail, target }) => {
       View.render(target)
-      View.model.getItems(detail).then(Page.render(target)).then(View.clean(target))
+      View.model.load(detail).then(Page.render(target)).then(View.clean(target))
     })
   }
 
