@@ -1,10 +1,8 @@
 class Page extends View {
   static LOAD_COUNT = 5
-  #SOURCE
 
   connectedCallback() {
-    this.SOURCE = Stories[this.getAttribute('data-type')]
-    this.dispatchEvent(View.getLoadEvent(0, Page.LOAD_COUNT, this.SOURCE))
+    this.dispatchEvent(View.getLoadEvent(0, Page.LOAD_COUNT, Page.getStory(this)))
   }
 
   static countChildren(node) {
