@@ -8,6 +8,11 @@ html {
   color: var(--color-foreground);
 }
 
+button {
+  background: inherit;
+  color: inherit;
+}
+
 article {
   textarea {
     background: inherit;

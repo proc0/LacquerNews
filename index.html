@@ -6,6 +6,7 @@
     <meta name="theme-color" content="dimgray" media="(prefers-color-scheme: dark)" />
     <meta name="description" content="Smooth Hacker News" />
     <title>Hack N Slash</title>
+    <!-- <base target="_top" href="https://example.com/" /> -->
     <link rel="icon" href="favicon.ico" sizes="any" />
     <link rel="stylesheet" href="style/main.css" />
     <script src="script/client.js"></script>
@@ -15,6 +16,22 @@
     <script src="script/item.js"></script>
     <script src="script/page.js"></script>
   </head>
+  <template id="item">
+    <article>
+      <h1><a target="_blank"></a></h1>
+      <h2>
+        <span></span>
+        <time></time>
+        <button name="reply">⮢</button>
+      </h2>
+      <details>
+        <summary></summary>
+        <section>
+          <button name="load"></button>
+        </section>
+      </details>
+    </article>
+  </template>
   <body>
     <script src="script/main.js"></script>
   </body>

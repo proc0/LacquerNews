@@ -23,6 +23,14 @@ class Item {
     return node
   }
 
+  static isContainerOpen(node) {
+    const container = Item.queryContainer(node)
+
+    if (!container) return false
+
+    return container.getAttribute('open') === ''
+  }
+
   static openContainer(node) {
     const container = Item.queryContainer(node)
 
@@ -52,10 +60,11 @@ class Item {
     const button = event.target
     const article = button.closest('article')
 
+    const loadCount = Item.LOAD_COUNT
     const childCount = Item.countChildren(article)
     const kidsNumber = Item.getKidsNumber(article)
-    const kidsLength = kidsNumber > Item.LOAD_COUNT ? kidsNumber - childCount : kidsNumber
-    const kidsLeft = kidsLength > Item.LOAD_COUNT ? kidsLength - Item.LOAD_COUNT : 0
+    const kidsLength = kidsNumber > loadCount ? kidsNumber - childCount : kidsNumber
+    const kidsLeft = kidsLength > loadCount ? kidsLength - loadCount : 0
 
     Item.setKidsNumber(article, kidsLeft)
 
@@ -67,14 +76,14 @@ class Item {
 
     Item.openContainer(article)
     const itemId = article.getAttribute('id')
-    const loadEvent = View.getLoadEvent(childCount, Item.LOAD_COUNT, Number(itemId))
+    const loadEvent = View.getLoadEvent(childCount, loadCount, Number(itemId))
 
     return article.dispatchEvent(loadEvent)
   }
 
   static onExpand(event) {
     event.stopPropagation()
-    const article = event.target.parentElement
+    const article = event.target.closest('article')
     const loader = Item.queryLoader(article)
 
     Item.toggleContainer(article)
@@ -86,10 +95,12 @@ class Item {
 
   static onReply(event) {
     event.stopPropagation()
-    const article = event.target.parentElement
+    const article = event.target.closest('article')
     const id = article.getAttribute('id')
 
-    article.querySelector('& > button').remove()
+    if (!Item.isContainerOpen(article)) {
+      Item.onExpand(event)
+    }
 
     const form = document.createElement('form')
     form.setAttribute('action', `/reply/${id}`)
@@ -102,83 +113,73 @@ class Item {
 
     form.appendChild(textarea)
     form.appendChild(submitButton)
-    article.insertBefore(form, article.querySelector('details'))
+    article.querySelector('div').insertAdjacentElement('afterend', form)
   }
 
   static render(item) {
     if (item.deleted || item.dead || item.text === '[delayed]') return
 
-    const article = document.createElement('article')
+    const node = document.getElementById('item').content.cloneNode(true)
+    const article = node.querySelector('article')
     article.setAttribute('id', item.id)
 
+    // set kid count in attribute
     const kidCount = item.kids?.length || 0
     Item.setKidsNumber(article, kidCount)
 
-    const title = document.createElement('h1')
-    const subtitle = document.createElement('h2')
-    const details = document.createElement('details')
-    const summary = document.createElement('summary')
-    const section = document.createElement('section')
-    const comment = document.createElement('div')
-
     if (item.title) {
+      const title = node.querySelector('h1')
       if (item.url) {
-        const link = document.createElement('a')
-        link.setAttribute('target', '_blank')
+        const link = node.querySelector('a')
         link.setAttribute('href', item.url)
         link.textContent = item.title
         link.addEventListener('click', View.depropagate)
-        title.appendChild(link)
       } else {
         title.textContent = item.title
       }
-
+      // expand details
       title.addEventListener('click', Item.onExpand)
     }
 
+    const subtitle = node.querySelector('h2')
+
     if (item.by && item.time) {
-      const username = document.createElement('span')
-      username.textContent = `${item.score || ''} ${item.by} `
+      // score and username
+      subtitle.querySelector('span').textContent = `${item.score || ''} ${item.by} `
+      // time of post and comment count
       const childCount = item.descendants || kidCount
       const childCountLabel = childCount > 0 ? `🗨 ${childCount}` : ''
       const timeLabel = View.getTimeLabel(item.time * 1000, Date.now())
-      subtitle.textContent = `⏲ ${timeLabel} ${childCountLabel} `
-      subtitle.prepend(username)
-
+      subtitle.querySelector('time').textContent = `⏲ ${timeLabel} ${childCountLabel} `
+      // expand details
       subtitle.addEventListener('click', Item.onExpand)
     }
 
+    // reply button click event
+    subtitle.querySelector('button').addEventListener('click', Item.onReply)
+    const section = node.querySelector('section')
+
     if (item.text) {
+      const comment = document.createElement('div')
       comment.innerHTML = item.text
+      // process comment links
       comment.querySelectorAll('a')?.forEach((a) => a.setAttribute('target', '_blank'))
-    }
-
-    if (item.type === 'comment') {
-      article.appendChild(subtitle)
-      article.appendChild(comment)
-      const replyButton = document.createElement('button')
-      replyButton.textContent = 'reply'
-      replyButton.addEventListener('click', Item.onReply)
-      article.appendChild(replyButton)
-    } else {
-      article.appendChild(title)
-      article.appendChild(subtitle)
-      section.appendChild(comment)
-    }
-
-    if (kidCount > 0 || (item.type !== 'comment' && item.text)) {
-      details.appendChild(summary)
-      details.appendChild(section)
-      article.appendChild(details)
+      if (item.type === 'comment') {
+        subtitle.insertAdjacentElement('afterend', comment)
+      } else {
+        section.insertAdjacentElement('afterbegin', comment)
+      }
     }
 
     if (kidCount > 0) {
-      const button = document.createElement('button')
+      const button = section.querySelector('button')
       button.textContent = `✛${kidCount}`
       button.addEventListener('click', Item.onLoad)
-      section.appendChild(button)
+      section.insertAdjacentElement('beforeend', button)
+    } else {
+      node.querySelector('details').remove()
     }
 
-    return article
+    return node
   }
 }
