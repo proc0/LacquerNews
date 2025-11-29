@@ -1,7 +1,7 @@
 class Item {
   static PAYLOAD = 3
 
-  static countChildren(node) {
+  static countChildNodes(node) {
     return node.querySelectorAll('& > details > section > article')?.length || 0
   }
 
@@ -9,12 +9,30 @@ class Item {
     return node.querySelector('& > details > section > button')
   }
 
-  static getKidsNumber(node) {
+  static queryReplyForm(node) {
+    const form =
+      node.parentElement instanceof Page
+        ? node.querySelector('& > details > section > form')
+        : node.querySelector('& > form')
+
+    return form
+  }
+
+  static queryComment(node) {
+    const comment =
+      node.parentElement instanceof Page
+        ? node.querySelector('& > details > section > div')
+        : node.querySelector('& > div')
+
+    return comment
+  }
+
+  static getKidData(node) {
     return Number(node.getAttribute('data-kids'))
   }
 
-  static setKidsNumber(node, kidsNumber) {
-    node.setAttribute('data-kids', kidsNumber)
+  static setKidData(node, count) {
+    node.setAttribute('data-kids', count)
 
     return node
   }
@@ -57,11 +75,11 @@ class Item {
     const article = button.closest('article')
 
     const payload = Item.PAYLOAD
-    const current = Item.countChildren(article)
-    const available = Item.getKidsNumber(article)
+    const current = Item.countChildNodes(article)
+    const available = Item.getKidData(article)
     const requested = available > payload ? available - current : available
     const remaining = requested > payload ? requested - payload : 0
-    Item.setKidsNumber(article, remaining)
+    Item.setKidData(article, remaining)
 
     if (remaining > 0) {
       button.textContent = `✛${remaining}`
@@ -83,7 +101,7 @@ class Item {
 
     Item.toggleContainer(article)
 
-    if (!Item.countChildren(article) && !!loader) {
+    if (!Item.countChildNodes(article) && !!loader) {
       loader.click()
     }
   }
@@ -91,34 +109,28 @@ class Item {
   static onReply(event) {
     event.stopPropagation()
     const article = event.target.closest('article')
-    const isPost = article.parentElement instanceof Page
 
-    const existingForm = isPost
-      ? article.querySelector('& > details > section > form')
-      : article.querySelector('& > form')
-    if (existingForm) {
-      return existingForm.remove()
-    }
+    // return and remove form, if it exists
+    const replyForm = Item.queryReplyForm(article)
+    if (replyForm) return replyForm.remove()
 
-    const node = document.getElementById('reply').content.cloneNode(true)
-    const form = node.querySelector('form')
+    // render form template
+    const temp = document.getElementById('reply').content.cloneNode(true)
+    const form = temp.querySelector('form')
     const id = article.getAttribute('id')
     form.setAttribute('action', `/reply/${id}`)
 
-    if (!Item.isContainerOpen(article)) {
-      Item.openContainer(article)
-    }
-
-    // select text body
-    const comment = isPost
-      ? article.querySelector('& > details > section > div')
-      : article.querySelector('& > div')
-    // if post has no text
-    if (isPost && !comment) {
+    const comment = Item.queryComment(article)
+    if (article.parentElement instanceof Page && !comment) {
+      // when post has no text, prepend to section top
       const section = article.querySelector('& > details > section')
       section.insertAdjacentElement('afterbegin', form)
     } else {
       comment.insertAdjacentElement('afterend', form)
+    }
+
+    if (!Item.isContainerOpen(article)) {
+      Item.openContainer(article)
     }
   }
 
@@ -129,9 +141,9 @@ class Item {
     const article = node.querySelector('article')
     article.setAttribute('id', item.id)
 
-    // set kid count in attribute
+    // set kid count in data attribute
     const kidCount = item.kids?.length || 0
-    Item.setKidsNumber(article, kidCount)
+    Item.setKidData(article, kidCount)
 
     if (item.title) {
       const title = node.querySelector('h1')
@@ -139,7 +151,7 @@ class Item {
         const link = node.querySelector('a')
         link.setAttribute('href', item.url)
         link.textContent = item.title
-        link.addEventListener('click', View.depropagate)
+        link.addEventListener('click', View.stopEvent)
       } else {
         title.textContent = item.title
       }
@@ -151,12 +163,14 @@ class Item {
 
     if (item.by && item.time) {
       // score and username
-      subtitle.querySelector('span').textContent = `${item.score || ''} ${item.by} `
+      subtitle.querySelector('b').textContent = `${item.score || ''}`
+      subtitle.querySelector('i').textContent = `${item.by}`
       // time of post and comment count
       const childCount = item.descendants || kidCount
-      const childCountLabel = childCount > 0 ? `🗨 ${childCount}` : ''
-      const timeLabel = View.getTimeLabel(item.time * 1000, Date.now())
-      subtitle.querySelector('time').textContent = `⏲ ${timeLabel} ${childCountLabel} `
+      const childLabel = childCount > 0 ? `🗨 ${childCount}` : ''
+      subtitle.querySelector('span').textContent = `${childLabel}`
+      const timeLabel = View.labelTime(item.time * 1000, Date.now())
+      subtitle.querySelector('time').textContent = `⏲ ${timeLabel} `
       // expand details
       subtitle.addEventListener('click', Item.onExpand)
     }

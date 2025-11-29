@@ -6,6 +6,22 @@ html {
   font-size: 0.18in;
 }
 
+app-page {
+  margin: 2rem 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+
+  & > article {
+    margin-left: 0;
+  }
+}
+
+h1 a {
+  text-decoration-thickness: 0.1rem;
+  text-underline-offset: 0.33rem;
+}
+
 h1,
 h2,
 button {
@@ -15,9 +31,21 @@ button {
 
 button {
   appearance: none;
+  font-size: inherit;
+  font-weight: bold;
+  border: none;
+  padding: 0;
+}
+
+h1 {
+  margin: 0 0 0.2rem 0;
 }
 
 h2 {
+  font-size: 1.2rem;
+  font-weight: normal;
+  margin: 0 0 0.5rem 0;
+
   &:has(~ details:not([open])) {
     &::after {
       content: '[🞤]';
@@ -29,10 +57,14 @@ h2 {
       content: '[─]';
     }
   }
+
+  button {
+    font-size: 1.5rem;
+  }
 }
 
 article {
-  padding: 0 0 0 1rem;
+  margin: 0 0 0.5rem 1rem;
 
   textarea {
     width: 100%;

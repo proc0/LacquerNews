@@ -31,32 +31,32 @@ class View extends HTMLElement {
     return () => parent.querySelector('span[data-loading]').remove()
   }
 
-  static getTimeLabel(begin, end) {
+  static labelTime(begin, end) {
     const ellapsed = end - begin
     const seconds = Math.floor(ellapsed / 1000)
     const minutes = Math.floor(ellapsed / 60000)
     const hours = Math.floor(ellapsed / 3600000)
     const days = Math.floor(ellapsed / 86400000)
 
-    let ellapsedText = ''
+    let timeLabel = ''
     if (seconds < 60) {
       const label = seconds === 1 ? 'second' : 'seconds'
-      ellapsedText = `${seconds} ${label}`
+      timeLabel = `${seconds} ${label}`
     } else if (minutes < 60) {
       const label = minutes === 1 ? 'minute' : 'minutes'
-      ellapsedText = `${minutes} ${label}`
+      timeLabel = `${minutes} ${label}`
     } else if (hours < 24) {
       const label = hours === 1 ? 'hour' : 'hours'
-      ellapsedText = `${hours} ${label}`
+      timeLabel = `${hours} ${label}`
     } else {
       const label = days === 1 ? 'day' : 'days'
-      ellapsedText = `${days} ${label}`
+      timeLabel = `${days} ${label}`
     }
 
-    return ellapsedText
+    return timeLabel
   }
 
-  static depropagate(event) {
+  static stopEvent(event) {
     event.stopPropagation()
   }
 

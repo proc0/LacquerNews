@@ -5,7 +5,7 @@ class Page extends View {
     this.dispatchEvent(View.loadEvent(0, Page.PAYLOAD, Page.getStory(this)))
   }
 
-  static countChildren(node) {
+  static countChildNodes(node) {
     return node.querySelectorAll('& > article')?.length || 0
   }
 
@@ -16,7 +16,7 @@ class Page extends View {
   static onLoad(event) {
     event.stopPropagation()
     const page = event.target.parentElement
-    const postCount = Page.countChildren(page)
+    const postCount = Page.countChildNodes(page)
     const loadEvent = View.loadEvent(postCount, Page.PAYLOAD, Page.getStory(page))
     return page.dispatchEvent(loadEvent)
   }
