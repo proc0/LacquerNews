@@ -96,24 +96,35 @@ class Item {
   static onReply(event) {
     event.stopPropagation()
     const article = event.target.closest('article')
-    const id = article.getAttribute('id')
+    const isPost = article.parentElement instanceof Page
 
-    if (!Item.isContainerOpen(article)) {
-      Item.onExpand(event)
+    const existingForm = isPost
+      ? article.querySelector('& > details > section > form')
+      : article.querySelector('& > form')
+    if (existingForm) {
+      return existingForm.remove()
     }
 
-    const form = document.createElement('form')
+    const id = article.getAttribute('id')
+    const node = document.getElementById('reply').content.cloneNode(true)
+    const form = node.querySelector('form')
     form.setAttribute('action', `/reply/${id}`)
-    form.setAttribute('method', 'post')
-    const textarea = document.createElement('textarea')
-    textarea.setAttribute('name', 'text')
-    const submitButton = document.createElement('button')
-    submitButton.textContent = 'submit'
-    submitButton.setAttribute('type', 'submit')
 
-    form.appendChild(textarea)
-    form.appendChild(submitButton)
-    article.querySelector('div').insertAdjacentElement('afterend', form)
+    if (!Item.isContainerOpen(article)) {
+      Item.openContainer(article)
+    }
+
+    // select text body
+    const comment = isPost
+      ? article.querySelector('& > details > section > div')
+      : article.querySelector('& > div')
+    // if post has no text
+    if (isPost && !comment) {
+      const section = article.querySelector('& > details > section')
+      section.insertAdjacentElement('afterbegin', form)
+    } else {
+      comment.insertAdjacentElement('afterend', form)
+    }
   }
 
   static render(item) {
@@ -164,6 +175,7 @@ class Item {
       comment.innerHTML = item.text
       // process comment links
       comment.querySelectorAll('a')?.forEach((a) => a.setAttribute('target', '_blank'))
+      // attach post body in section to collapse it
       if (item.type === 'comment') {
         subtitle.insertAdjacentElement('afterend', comment)
       } else {
