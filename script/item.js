@@ -121,7 +121,8 @@ class Item {
     form.setAttribute('action', `/reply/${id}`)
 
     const comment = Item.queryComment(article)
-    if (article.parentElement instanceof Page && !comment) {
+    const isPost = article.parentElement instanceof Page
+    if (isPost && !comment) {
       // when post has no text, prepend to section top
       const section = article.querySelector('& > details > section')
       section.insertAdjacentElement('afterbegin', form)
@@ -129,7 +130,7 @@ class Item {
       comment.insertAdjacentElement('afterend', form)
     }
 
-    if (!Item.isContainerOpen(article)) {
+    if (isPost && !Item.isContainerOpen(article)) {
       Item.openContainer(article)
     }
   }
