@@ -1,6 +1,6 @@
 html.theme-gruvbox {
-  --color-background: #181818;
-  --color-foreground: #bbb;
+  --color-background: #222;
+  --color-foreground: #ccc;
   --color-secondary: #888;
   --color-highlight: #eee;
 }
@@ -12,6 +12,11 @@ html {
 
 h2 {
   color: var(--color-secondary);
+
+  b,
+  i {
+    color: var(--color-foreground);
+  }
 }
 
 a,

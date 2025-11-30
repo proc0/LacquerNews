@@ -158,13 +158,21 @@ class Item {
       }
       // expand details
       title.addEventListener('click', Item.onExpand)
+    } else {
+      node.querySelector('h1').remove()
     }
 
     const subtitle = node.querySelector('h2')
 
     if (item.by && item.time) {
-      // score and username
-      subtitle.querySelector('b').textContent = `${item.score || ''}`
+      // socre and remove downvote for posts
+      if (item.type === 'comment') {
+        subtitle.querySelector('b').remove()
+      } else {
+        subtitle.querySelector('b').textContent = `${item.score || ''}`
+        subtitle.querySelector('button[name="downvote"]').remove()
+      }
+      // username
       subtitle.querySelector('i').textContent = `${item.by}`
       // time of post and comment count
       const childCount = item.descendants || kidCount
@@ -177,7 +185,7 @@ class Item {
     }
 
     // reply button click event
-    subtitle.querySelector('button').addEventListener('click', Item.onReply)
+    subtitle.querySelector('button[name="reply"]').addEventListener('click', Item.onReply)
     const section = node.querySelector('section')
 
     if (item.text) {

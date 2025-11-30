@@ -41,7 +41,7 @@ class Page extends View {
 
       if (isPage && !loader) {
         const button = document.createElement('button')
-        button.textContent = `Load more`
+        button.textContent = `Load more\n▼`
         button.addEventListener('click', Page.onLoad)
         parent.appendChild(button)
       }

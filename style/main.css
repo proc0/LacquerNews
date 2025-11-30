@@ -14,6 +14,18 @@ app-page {
 
   & > article {
     margin-left: 0;
+    padding: 0.3rem 0;
+
+    & > h2 {
+      margin: 0 0 0.5rem 0.2rem;
+      i {
+        color: inherit;
+      }
+    }
+  }
+
+  & > button {
+    white-space: pre-line;
   }
 }
 
@@ -36,14 +48,15 @@ button {
 }
 
 h1 {
-  margin: 0 0 0.2rem 0;
+  margin: 0.2rem 0 0 0;
   font-weight: normal;
+  font-size: 1.8rem;
 }
 
 h2 {
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: normal;
-  margin: 0 0 0.5rem 0.2rem;
+  margin: 0 0 0.5rem -0.2rem;
 
   &:has(~ details:not([open])) {
     &::after {
@@ -57,25 +70,52 @@ h2 {
     }
   }
 
-  button {
+  button[name='downvote'] {
+    margin-left: -0.5rem;
+  }
+
+  i {
+    margin: 0 0.5rem;
+  }
+
+  span,
+  time {
+    margin-right: 0.2rem;
+  }
+
+  button[name='reply'] {
     font-size: 1.5rem;
+    margin-right: 0.2rem;
   }
 }
 
 article {
-  margin: 0 0 0.5rem 0;
+  padding: 0.8rem 0 0.5rem 0;
 
   textarea {
     width: 100%;
   }
-}
 
-details {
-  summary {
-    display: none;
+  details {
+    summary {
+      display: none;
+    }
   }
 
+  details[open] {
+    margin-top: 0.8rem;
+  }
+
+  div p:last-child {
+    margin-bottom: 0;
+  }
+}
+
+details[open] {
+  box-shadow: 2px 5px 8px inset rgb(5 5 5 / 34%);
+
   section {
-    margin: 0 0 0 1.4rem;
+    padding: 0 2rem 1rem 1.2rem;
+    background-color: rgb(0 0 0 / 13%);
   }
 }
