@@ -22,6 +22,7 @@
     <script src="script/view.js"></script>
     <script src="script/item.js"></script>
     <script src="script/page.js"></script>
+    <script src="script/main.js"></script>
   </head>
   <template id="reply">
     <form method="post">
@@ -50,6 +51,21 @@
     </article>
   </template>
   <body>
-    <script src="script/main.js"></script>
+    <main is="app-main">
+      <nav is="app-nav" role="tablist">
+        <a href="#top" role="tab">Top</a>
+        <a href="#new" role="tab">New</a>
+        <a href="#best" role="tab">Best</a>
+        <a href="#ask" role="tab">Ask</a>
+        <a href="#show" role="tab">Show</a>
+        <a href="#job" role="tab">Jobs</a>
+      </nav>
+      <app-page id="top" role="tabpanel" class="active"></app-page>
+      <app-page id="new" role="tabpanel"></app-page>
+      <app-page id="best" role="tabpanel"></app-page>
+      <app-page id="ask" role="tabpanel"></app-page>
+      <app-page id="show" role="tabpanel"></app-page>
+      <app-page id="job" role="tabpanel"></app-page>
+    </main>
   </body>
 </html>

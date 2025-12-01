@@ -80,7 +80,16 @@ class Item {
     const isPost = article.parentElement instanceof Page
     if (isPost && !text) {
       // when post has no text, prepend to section top
-      const section = article.querySelector('& > details > section')
+      let section = article.querySelector('& > details > section')
+      if (!section) {
+        // first!
+        const details = document.createElement('details')
+        const summary = document.createElement('summary')
+        section = document.createElement('section')
+        details.appendChild(summary)
+        details.appendChild(section)
+        article.appendChild(details)
+      }
       section.insertAdjacentElement('afterbegin', form)
     } else {
       text.insertAdjacentElement('afterend', form)

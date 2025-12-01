@@ -8,9 +8,13 @@ html {
 
 app-page {
   margin: 3.4rem 3rem;
-  display: flex;
+  display: none;
   flex-direction: column;
   justify-content: flex-start;
+
+  &.active {
+    display: flex;
+  }
 
   & > article {
     margin-left: 0;

@@ -1,18 +1,23 @@
 class Page extends View {
   static TAG = 'app-page'
-  static PAYLOAD = 5
+  static PAYLOAD = 13
 
   connectedCallback() {
-    const loadEvent = View.loadEvent(0, Page.PAYLOAD, this.id)
-    this.dispatchEvent(loadEvent)
+    if (this.classList.contains('active') && location.hash === this.id) {
+      this.load()
+    }
+  }
+
+  load() {
+    const postCount = Query.countChildren(this)
+    const loadEvent = View.loadEvent(postCount, Page.PAYLOAD, this.id)
+    return this.dispatchEvent(loadEvent)
   }
 
   static onLoad(event) {
     event.stopPropagation()
     const page = event.target.parentElement
-    const postCount = Query.countChildren(page)
-    const loadEvent = View.loadEvent(postCount, Page.PAYLOAD, page.id)
-    return page.dispatchEvent(loadEvent)
+    return page.load()
   }
 
   static render(parent) {
@@ -43,3 +48,5 @@ class Page extends View {
     }
   }
 }
+
+customElements.define(Page.TAG, Page)
