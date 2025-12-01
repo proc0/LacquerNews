@@ -95,10 +95,21 @@ class Item {
     event.stopPropagation()
     const button = event.target
     const article = button.closest('article')
+    const isPost = article.parentElement instanceof Page
     const vote = button.getAttribute('name')
     const id = article.getAttribute('id')
-    fetch(`/${vote}/${id}`).then((res) => {
-      if (res.ok) button.remove()
+
+    fetch(`/${vote}/${id}`).then((response) => {
+      if (response.ok) {
+        if (!isPost) {
+          if (vote === 'upvote') {
+            button.nextElementSibling.remove()
+          } else {
+            button.previousElementSibling.remove()
+          }
+        }
+        button.remove()
+      }
     })
   }
 
