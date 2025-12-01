@@ -34,7 +34,7 @@ class Tabs extends HTMLElement {
     if (location.hash.length) {
       this.change(location.hash)
     } else {
-      document.querySelector('app-page.active').load()
+      document.querySelector(`${Page.TAG}.active`).load()
     }
   }
 
