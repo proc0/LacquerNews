@@ -1,4 +1,8 @@
 class Query {
+  static container(node) {
+    return node instanceof Page ? node : node.querySelector('section')
+  }
+
   static countChildren(node) {
     return node instanceof Page
       ? node.querySelectorAll('& > article')?.length || 0

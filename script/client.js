@@ -1,33 +1,40 @@
-class Stories {
-  static Top = new Stories('topstories')
-  static New = new Stories('newstories')
-  static Ask = new Stories('askstories')
-  static Job = new Stories('jobstories')
-  static Best = new Stories('beststories')
-  static Show = new Stories('showstories')
+class HN {
+  static BASE = 'https://hacker-news.firebaseio.com/v0'
+  static top = new HN('top')
+  static new = new HN('new')
+  static ask = new HN('ask')
+  static job = new HN('job')
+  static best = new HN('best')
+  static show = new HN('show')
 
-  constructor(url) {
-    this.url = url
+  constructor(id) {
+    this.id = id
+    this.url = HN.getURL(id)
+  }
+
+  static getURI(id) {
+    switch (typeof id) {
+      case 'string':
+        return `${id}stories.json`
+      case 'number':
+        return `item/${id}.json`
+      default:
+        throw new Error('Invalid URI id')
+    }
+  }
+
+  static getURL(id) {
+    return `${HN.BASE}/${HN.getURI(id)}`
   }
 }
 
 class Client {
-  static base(uri) {
-    return `https://hacker-news.firebaseio.com/v0/${uri}.json`
-  }
-
-  static fetchBase(uri) {
-    return fetch(Client.base(uri)).then(Client.receive).catch(console.error)
+  static fetchPosts(id) {
+    return fetch(HN[id].url).then(Client.receive).catch(console.error)
   }
 
   static fetchItems(ids) {
-    return Promise.all(
-      ids.map((id) =>
-        fetch(Client.base(`item/${id}`))
-          .then(Client.receive)
-          .then(Client.normalize)
-      )
-    )
+    return Promise.all(ids.map((id) => fetch(HN.getURL(id)).then(Client.receive)))
   }
 
   static receive(response) {
@@ -36,9 +43,5 @@ class Client {
     }
 
     return response.json()
-  }
-
-  static normalize(data) {
-    return data
   }
 }

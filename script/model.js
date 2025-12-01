@@ -1,18 +1,20 @@
 class Model {
   store = new Store()
 
-  list(cursor, count, source) {
-    if (source instanceof Stories) {
-      return Client.fetchBase(source.url).then((ids) => ids.slice(cursor, cursor + count))
-    } else if (typeof source === 'number') {
-      return this.store.find(source).then((item) => item.kids.slice(cursor, cursor + count))
-    } else {
-      return this.unit(this.unit([]))
+  list(cursor, count, id) {
+    if (typeof id === 'string') {
+      return Client.fetchPosts(id).then((ids) => ids.slice(cursor, cursor + count))
     }
+
+    if (typeof id === 'number') {
+      return this.store.find(id).then(({ kids }) => kids.slice(cursor, cursor + count))
+    }
+
+    return this.unit(this.unit([]))
   }
 
-  load({ cursor, count, source }) {
-    return this.list(cursor, count, source)
+  load({ cursor, count, id }) {
+    return this.list(cursor, count, id)
       .then(this.store.retrieve.bind(this.store))
       .then(this.reload.bind(this))
       .catch(console.error)

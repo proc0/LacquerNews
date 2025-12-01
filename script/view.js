@@ -12,18 +12,17 @@ class View extends HTMLElement {
   }
 
   static render(parent) {
-    const isPage = parent instanceof Page
     const loader = Query.loader(parent)
-    const container = isPage ? parent : parent.querySelector('section')
+    const container = Query.container(parent)
 
-    const loadingText = document.createElement('span')
-    loadingText.setAttribute('data-loading', '')
-    loadingText.textContent = 'Loading...'
+    const loading = document.createElement('span')
+    loading.setAttribute('data-loading', '')
+    loading.textContent = 'Loading...'
 
     if (loader) {
-      container.insertBefore(loadingText, loader)
+      container.insertBefore(loading, loader)
     } else {
-      container.appendChild(loadingText)
+      container.appendChild(loading)
     }
   }
 
@@ -35,13 +34,13 @@ class View extends HTMLElement {
     event.stopPropagation()
   }
 
-  static loadEvent(cursor, count, source) {
+  static loadEvent(cursor, count, id) {
     return new CustomEvent(View.EVENT_LOAD, {
       bubbles: true,
       detail: {
         cursor,
         count,
-        source,
+        id,
       },
     })
   }

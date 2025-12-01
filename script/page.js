@@ -2,47 +2,43 @@ class Page extends View {
   static PAYLOAD = 5
 
   connectedCallback() {
-    this.dispatchEvent(View.loadEvent(0, Page.PAYLOAD, Page.getStory(this)))
+    const loadEvent = View.loadEvent(0, Page.PAYLOAD, this.id)
+    this.dispatchEvent(loadEvent)
   }
 
   static onLoad(event) {
     event.stopPropagation()
     const page = event.target.parentElement
     const postCount = Query.countChildren(page)
-    const loadEvent = View.loadEvent(postCount, Page.PAYLOAD, Page.getStory(page))
+    const loadEvent = View.loadEvent(postCount, Page.PAYLOAD, page.id)
     return page.dispatchEvent(loadEvent)
   }
 
   static render(parent) {
     return (items) => {
-      const isPage = parent instanceof Page
       const loader = Query.loader(parent)
-      const container = isPage ? parent : parent.querySelector('section')
+      const container = Query.container(parent)
 
       items.forEach((item) => {
-        const valid = View.normalize(item)
+        const normal = View.normalize(item)
 
-        if (!valid) return
+        if (!normal) return
 
-        const post = Item.render(valid)
+        const node = Item.render(normal)
 
         if (loader) {
-          container.insertBefore(post, loader)
+          container.insertBefore(node, loader)
         } else {
-          container.appendChild(post)
+          container.appendChild(node)
         }
       })
 
-      if (isPage && !loader) {
+      if (parent instanceof Page && !loader) {
         const button = document.createElement('button')
         button.textContent = `Load more\n▼`
         button.addEventListener('click', Page.onLoad)
         parent.appendChild(button)
       }
     }
-  }
-
-  static getStory(page) {
-    return Stories[page.getAttribute('data-type')]
   }
 }

@@ -57,6 +57,7 @@ h2 {
   font-size: 1rem;
   font-weight: normal;
   margin: 0 0 0.5rem -0.2rem;
+  line-height: 1rem;
 
   &:has(~ details:not([open])) {
     &::after {
@@ -107,6 +108,10 @@ article {
 
     section {
       padding: 0 2rem 1rem 1.2rem;
+
+      & > div {
+        padding-top: 1.4rem;
+      }
 
       & > button {
         font-weight: bold;
