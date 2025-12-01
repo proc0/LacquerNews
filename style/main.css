@@ -6,8 +6,29 @@ html {
   font-size: 0.15in;
 }
 
+main {
+  margin: 5.2rem 3rem;
+
+  nav {
+    display: flex;
+    padding: 2rem 0 0 0;
+    width: 100%;
+    position: fixed;
+    top: 0;
+
+    a:first-child {
+      padding-left: 0;
+    }
+
+    a {
+      display: flex;
+      text-decoration: none;
+      padding: 1rem;
+    }
+  }
+}
+
 app-page {
-  margin: 3.4rem 3rem;
   display: none;
   flex-direction: column;
   justify-content: flex-start;
