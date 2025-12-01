@@ -6,8 +6,15 @@ class View extends HTMLElement {
     super()
 
     this.addEventListener(View.EVENT_LOAD, ({ detail, target }) => {
-      View.render(target)
-      View.model.load(detail).then(Page.render(target)).then(View.clean(target))
+      const loading = View.render(target)
+      View.model
+        .load(detail)
+        .then((result) => {
+          loading.setAttribute('value', '90')
+          return result
+        })
+        .then(Page.render(target))
+        .then(View.finish(target))
     })
   }
 
@@ -15,19 +22,26 @@ class View extends HTMLElement {
     const loader = Query.loader(parent)
     const container = Query.container(parent)
 
-    const loading = document.createElement('span')
-    loading.setAttribute('data-loading', '')
-    loading.textContent = 'Loading...'
+    const loading = document.createElement('progress')
+    loading.setAttribute('max', '100')
+    loading.setAttribute('value', '30')
 
     if (loader) {
       container.insertBefore(loading, loader)
     } else {
       container.appendChild(loading)
     }
+
+    return loading
   }
 
-  static clean(parent) {
-    return () => parent.querySelector('span[data-loading]').remove()
+  static finish(parent) {
+    return () => {
+      const loading = parent.querySelector('progress')
+      loading.setAttribute('value', '100')
+      loading.setAttribute('style', 'visibility: hidden')
+      setTimeout(() => parent.querySelector('progress').remove(), 100)
+    }
   }
 
   static stopEvent(event) {

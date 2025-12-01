@@ -124,3 +124,9 @@ article {
     margin-bottom: 0;
   }
 }
+
+progress {
+  width: 100%;
+  height: 0.2rem;
+  transition: visibility 100s ease-in;
+}
