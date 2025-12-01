@@ -8,7 +8,11 @@ class HN {
   static show = new HN('show')
 
   constructor(id) {
-    this.id = id
+    if (id.user) {
+      this.id = 'user'
+    } else {
+      this.id = id
+    }
     this.url = HN.getURL(id)
   }
 
@@ -18,6 +22,10 @@ class HN {
         return `${id}stories.json`
       case 'number':
         return `item/${id}.json`
+      case 'object':
+        if (id.user) {
+          return `user/${id.user}.json`
+        }
       default:
         throw new Error('Invalid URI id')
     }

@@ -24,6 +24,7 @@ router
   .get('/script/:file', loadScript)
   .get('/style/:file', loadStyle)
   .get('/upvote/:id', Server.upvote)
+  .get('/user', Server.user)
   .post('/reply/:id', Server.reply)
 
 app.use(router.routes())

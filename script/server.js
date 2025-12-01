@@ -114,4 +114,11 @@ export class Server {
     // ctx.redirect('/')
     ctx.body = { ok: true }
   }
+
+  static user(ctx) {
+    const cookie = process.env.HN_COOKIE
+    if (cookie) {
+      ctx.body = { ok: true, user: cookie.split('&')[0] }
+    }
+  }
 }

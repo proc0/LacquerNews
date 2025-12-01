@@ -4,7 +4,13 @@ class Model {
   list(cursor, count, id) {
     switch (typeof id) {
       case 'string':
-        return Client.fetchPosts(id).then((ids) => ids.slice(cursor, cursor + count))
+        if (id === 'user') {
+          return Client.fetchPosts(id).then(({ submitted }) =>
+            submitted.slice(cursor, cursor + count)
+          )
+        } else {
+          return Client.fetchPosts(id).then((ids) => ids.slice(cursor, cursor + count))
+        }
       case 'number':
         return this.store.find(id).then(({ kids }) => kids.slice(cursor, cursor + count))
       default:
