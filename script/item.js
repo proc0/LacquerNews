@@ -124,15 +124,15 @@ class Item {
 
   static render(item) {
     const template = document.getElementById('item')
-    const node = template.content.cloneNode(true)
+    const fragment = template.content.cloneNode(true)
 
-    const article = node.querySelector('article')
+    const article = fragment.querySelector('article')
     article.setAttribute('id', item.id)
     article.setAttribute('data-kids', item.kids.length)
 
-    const title = node.querySelector('h1')
+    const title = fragment.querySelector('h1')
     if (item.title) {
-      const link = node.querySelector('a')
+      const link = fragment.querySelector('a')
       if (item.url) {
         link.setAttribute('href', item.url)
         link.textContent = item.title
@@ -146,7 +146,7 @@ class Item {
       title.remove()
     }
 
-    const subtitle = node.querySelector('h2')
+    const subtitle = fragment.querySelector('h2')
 
     const upvote = subtitle.querySelector('button[name="upvote"]')
     if (item.upvote) {
@@ -199,8 +199,11 @@ class Item {
       reply.remove()
     }
 
-    const section = node.querySelector('section')
-
+    const section = fragment.querySelector('section')
+    // Handling comments or post text:
+    // In order to hide post text it must be inside <section>
+    // For comments, it should be visible (outside <section>)
+    // This difference is bifurcating logic across components
     if (item.text) {
       const comment = document.createElement('div')
       comment.innerHTML = item.text
@@ -220,10 +223,10 @@ class Item {
       loader.addEventListener('click', Item.onLoad)
       section.insertAdjacentElement('beforeend', loader)
     } else if (item.type === 'comment' || (item.type !== 'comment' && !item.text)) {
-      node.querySelector('details').remove()
+      fragment.querySelector('details').remove()
     }
 
-    return node
+    return fragment
   }
 
   static renderAge(begin, end) {

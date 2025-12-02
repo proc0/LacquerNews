@@ -20,7 +20,7 @@ class Page extends View {
       const container = Query.container(parent)
       const isConnected = document.querySelector('main').isConnected
       const isPost = parent.parentElement instanceof Page
-      const firstPostLoad = isPost && Query.countChildren(parent) === 0
+      const isFirstPostLoad = isPost && Query.countChildren(parent) === 0
 
       items.forEach((data) => {
         const item = View.normalize(data, isConnected)
@@ -34,8 +34,8 @@ class Page extends View {
           container.appendChild(fragment)
         }
 
-        // load sub-items on first post load
-        if (firstPostLoad && item.kids.length > 0) {
+        // load sub-comments on first post load
+        if (isFirstPostLoad && item.kids.length > 0) {
           Item.onLoad({
             stopPropagation: () => {},
             target: Query.loader(document.getElementById(item.id)),

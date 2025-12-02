@@ -73,6 +73,7 @@ class View extends HTMLElement {
       item.downvote = isConnected
       item.reply = isConnected
     } else {
+      // posts
       item.upvote = isConnected
       item.downvote = false
       item.reply = isConnected
