@@ -219,7 +219,7 @@ class Item {
       loader.textContent = `✛${item.kids.length}`
       loader.addEventListener('click', Item.onLoad)
       section.insertAdjacentElement('beforeend', loader)
-    } else {
+    } else if (item.type === 'comment' || (item.type !== 'comment' && !item.text)) {
       node.querySelector('details').remove()
     }
 
