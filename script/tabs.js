@@ -45,13 +45,16 @@ class Tabs extends HTMLElement {
 
     const page = document.querySelector(id)
     const tab = document.querySelector(`nav a[href="${id}"]`)
+    tab.classList.add('active')
+    page.classList.add('active')
+
+    if (id === '#login') return
+
     if (!page) throw Error('Page does not exist')
 
     if (!Query.countChildren(page)) {
       page.load()
     }
-    tab.classList.add('active')
-    page.classList.add('active')
   }
 }
 

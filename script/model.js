@@ -32,7 +32,8 @@ class Model {
       }
 
       return Client.fetchItems(missingIds).then((items) => {
-        if (!items?.length) {
+        const validItems = items?.filter((a) => a).length
+        if (!validItems || validItems !== items.length) {
           return reject(items)
         }
 

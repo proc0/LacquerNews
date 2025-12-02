@@ -31,6 +31,10 @@ class App extends HTMLElement {
           tabs.add('user', user)
           const app = document.querySelector('main')
           app.isConnected = true
+          // remove login tab
+          app.querySelector('aside').remove()
+          tabs.querySelector('a[href="#login"]').remove()
+
           app.appendChild(userPage)
           tabs.initialize()
         })
