@@ -7,7 +7,7 @@ html {
 }
 
 main {
-  margin: 5.5rem 3rem;
+  margin: 0 3rem 5.5rem 3rem;
 
   nav {
     display: flex;
@@ -32,6 +32,7 @@ app-page {
   display: none;
   flex-direction: column;
   justify-content: flex-start;
+  margin-top: 6rem;
 
   &.active {
     display: flex;

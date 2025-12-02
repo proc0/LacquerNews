@@ -17,12 +17,9 @@ main {
     a {
       color: var(--color-secondary);
 
-      &:hover {
-        color: var(--color-highlight) !important;
-      }
-
+      &:hover,
       &.active {
-        color: var(--color-highlight);
+        color: var(--color-highlight) !important;
       }
 
       &:visited {

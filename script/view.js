@@ -19,18 +19,12 @@ class View extends HTMLElement {
   }
 
   static render(parent) {
-    const loader = Query.loader(parent)
     const container = Query.container(parent)
 
     const loading = document.createElement('progress')
     loading.setAttribute('max', '100')
     loading.setAttribute('value', '30')
-
-    if (loader) {
-      container.insertBefore(loading, loader)
-    } else {
-      container.appendChild(loading)
-    }
+    container.insertAdjacentElement('afterbegin', loading)
 
     return loading
   }
