@@ -36,6 +36,7 @@ main {
 
     &.active {
       display: flex;
+      flex-direction: column;
     }
   }
 }

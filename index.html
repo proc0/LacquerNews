@@ -87,7 +87,25 @@
       <app-page id="ask" role="tabpanel"></app-page>
       <app-page id="show" role="tabpanel"></app-page>
       <app-page id="job" role="tabpanel"></app-page>
-      <aside id="login" role="tabpanel">To login go here</aside>
+      <aside id="login" role="tabpanel">
+        <h1>This is a static site</h1>
+        <p>
+          Loggin in is not supported by the Hacker News API.
+          <br />
+          As a workaround, you need to run this repository locally.
+          <ol>
+            <li>Clone the <a href="https://github.com/proc0/HackerZen" target="_blank">repo</a>.</li>
+            <li>Install dependencies.</li>
+            <li>Login to <a href="https://news.ycombinator.com" target="_blank">Hacker News</a>.</li>
+            <li>Copy the user cookie.</li>
+            <li>Paste the cookie into HN_COOKIE environment variable.</li>
+            <li>Run the local server: <code>node .</code></li>
+            <li>Open localhost:3000 in a browser.</li>
+          </ol>
+          <br />
+          <span>For full instructions see the <a href="https://github.com/proc0/HackerZen" target="_blank">README</a>.</span>
+        </p>
+      </aside>
     </main>
   </body>
 </html>
