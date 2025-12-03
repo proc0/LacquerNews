@@ -18,14 +18,25 @@
   "license": "MIT",
   "author": "proc0",
   "type": "module",
-  "main": "index.js",
+  "source": "script/main.js",
+  "outputFormat": "global",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "targets": {
+    "default": {
+      "includeNodeModules": false,
+      "publicUrl": ".",
+      "sourceMap": false
+    }
   },
   "dependencies": {
     "@koa/bodyparser": "^6.0.0",
     "@koa/router": "^14.0.0",
     "koa": "^3.0.3",
     "node-html-parser": "^7.0.1"
+  },
+  "devDependencies": {
+    "parcel": "^2.16.1"
   }
 }
