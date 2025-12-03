@@ -1,0 +1,68 @@
+<!DOCTYPE html><html class=theme-zone lang=en><meta charset=utf-8><meta name=viewport content="width=device-width, initial-scale=1"><meta name=theme-color content=dimgray media="(prefers-color-scheme: dark)"><meta name=description content="A minimal Hacker News clone."><title>HackerZen</title><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link href="https://fonts.googleapis.com/css2?family=Roboto:ital@0;1&amp;display=swap" rel=stylesheet><link rel=icon type=image/x-icon href=favicon.ico sizes=any><link rel=stylesheet href=style.css>
+<script src=bundle.js></script>
+<template id=reply>
+    <form>
+      <textarea name=text></textarea>
+      <button>Submit</button>
+    </form>
+  </template><template id=item>
+    <article>
+      <h1><a target=_blank></a></h1>
+      <h2>
+        <b></b>
+        <button name=upvote title=Upvote>▲</button>
+        <button name=downvote title=Downvote>▼</button>
+        <i></i>
+        <time></time>
+        <span></span>
+        <button name=reply title=Reply>➦</button>
+      </h2>
+      <details>
+        <summary></summary>
+        <section>
+          <button name=load title="Load more"></button>
+        </section>
+      </details>
+    </article>
+  </template><body>
+    <main is=app-main>
+      <nav is=app-nav role=tablist>
+        <a href=https://news.ycombinator.com target=_blank>
+          <svg xmlns:xmlns=http://www.w3.org/2000/svg id=logo width=24 height=24 viewBox="0 0 24 24"><g id=logo-square><rect id=square width=21 height=21 x=1 y=1 /><path id=logo-letter d="M7 18.2v-2l6.3-9.5H7.2V4.3h9.4v2.1l-6.4 9.4h6.5v2.4Z"/></g></svg>
+        </a>
+        <a href=#top role=tab class=active>Top</a>
+        <a href=#new role=tab>New</a>
+        <a href=#best role=tab>Best</a>
+        <a href=#ask role=tab>Ask</a>
+        <a href=#show role=tab>Show</a>
+        <a href=#job role=tab>Jobs</a>
+        <a href=#login role=tab>Login</a>
+      </nav>
+      <app-page id=top role=tabpanel class=active></app-page>
+      <app-page id=new role=tabpanel></app-page>
+      <app-page id=best role=tabpanel></app-page>
+      <app-page id=ask role=tabpanel></app-page>
+      <app-page id=show role=tabpanel></app-page>
+      <app-page id=job role=tabpanel></app-page>
+      <aside id=login role=tabpanel>
+        <h1>This is a static site</h1>
+        <p>
+          Loggin in is not supported by the Hacker News API.
+          <br>
+          As a workaround, you need to run this repository locally.
+          <ol>
+            <li>Clone the <a href=https://github.com/proc0/HackerZen target=_blank>repo</a>.</li>
+            <li>Install dependencies.</li>
+            <li>Login to <a href=https://news.ycombinator.com target=_blank>Hacker News</a>.</li>
+            <li>Copy the user cookie.</li>
+            <li>Paste the cookie into HN_COOKIE environment variable.</li>
+            <li>Run the local server: <code>node .</code></li>
+            <li>Open localhost:3000 in a browser.</li>
+          </ol>
+          <br>
+          <span>For full instructions see the <a href=https://github.com/proc0/HackerZen target=_blank>README</a>.</span>
+        <p></p>
+      </aside>
+    </main>
+  
+
